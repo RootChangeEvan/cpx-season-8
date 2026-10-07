@@ -1,0 +1,1648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One Season of CPX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --paper:#EDF2F4; --card:#FFFFFF; --soft:#F5F8F9; --ink:#1C3344; --ink2:#52677A; --line:#D3DDE2;
+  --cac:#D6404B; --cac-ink:#A92E38; --cac-bg:#FCECEE;
+  --mac:#E3A019; --mac-ink:#8A5A00; --mac-bg:#FDF3DE;
+  --cc:#0E978A; --cc-ink:#0A6B62; --cc-bg:#E2F3F1;
+  --g:var(--ink); --g-ink:var(--ink); --g-bg:var(--soft);
+  --serif:'Literata', Georgia, 'Times New Roman', serif;
+  --sans:'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+[data-g="cac"]{--g:var(--cac);--g-ink:var(--cac-ink);--g-bg:var(--cac-bg)}
+[data-g="mac"]{--g:var(--mac);--g-ink:var(--mac-ink);--g-bg:var(--mac-bg)}
+[data-g="cc"]{--g:var(--cc);--g-ink:var(--cc-ink);--g-bg:var(--cc-bg)}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.2;margin:0 0 .45em;letter-spacing:-.005em}
+h1{font-size:clamp(1.9rem,5vw,2.7rem)}
+h2{font-size:1.32rem}
+h3{font-size:1.06rem}
+p{margin:.3em 0 .8em}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+.wrap.wide{max-width:1260px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+.muted{color:var(--ink2)}
+.small{font-size:.88rem}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hostgrid{display:grid;grid-template-columns:minmax(260px,1fr) 2fr;gap:14px}
+@media (max-width:860px){.grid3,.hostgrid{grid-template-columns:1fr}}
+@media (max-width:480px){.grid2{grid-template-columns:1fr}}
+button{font:inherit;font-weight:700;font-size:.95rem;border-radius:999px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);
+  padding:7px 16px;min-height:40px;cursor:pointer}
+button.primary{background:var(--g-ink);border-color:var(--g-ink);color:#fff}
+button.quiet{border-color:var(--line);color:var(--ink2)}
+button.warn{border-color:#8A2B12;color:#8A2B12}
+button:disabled{opacity:.42;cursor:not-allowed}
+button:not(:disabled):hover{filter:brightness(.96)}
+input,select,textarea{font:inherit;width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+label{font-weight:700;display:block;margin:10px 0 4px;font-size:.93rem}
+:focus-visible{outline:3px solid #2C7BCB;outline-offset:2px}
+.mt{margin-top:12px}
+
+/* Top band, colored by your circle */
+.topbar{position:sticky;top:0;z-index:20;background:var(--g-ink);color:#fff;padding-top:env(safe-area-inset-top,0px)}
+.topbar .wrap{padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.topbar .who{font-family:var(--serif);font-weight:700;font-size:1.02rem;line-height:1.2}
+.topbar .who span{display:block;font-family:var(--sans);font-weight:400;font-size:.85rem;opacity:.85}
+.topbar .ph{text-align:right;font-size:.9rem;line-height:1.25}
+.topbar .ph b{display:block;font-size:1rem}
+
+/* Role card */
+.role{border:2px solid var(--g);border-radius:14px;background:#fff;margin:0 0 14px;overflow:hidden}
+.role header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:14px 16px 6px}
+.role .kind{color:var(--ink2);font-size:.9rem}
+.role .body{padding:0 16px 14px}
+.role .secret{background:var(--g-bg);border-radius:10px;padding:10px 12px;margin-top:8px}
+.role .secret b{color:var(--g-ink)}
+
+/* Items carry the color of the circle they came from */
+.item{border-left:4px solid var(--line);background:var(--soft);border-radius:4px 10px 10px 4px;padding:10px 12px;margin:8px 0}
+.item.o-cac{border-left-color:var(--cac)} .item.o-mac{border-left-color:var(--mac)} .item.o-cc{border-left-color:var(--cc)} .item.o-seed{border-left-color:#8A9BA8}
+.item .meta{font-size:.85rem;color:var(--ink2)}
+.item .title{font-weight:700}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:1px 9px;border:1px solid var(--line);background:#fff;color:var(--ink2);margin-right:4px}
+.tag.ok{background:var(--cc-bg);border-color:var(--cc);color:var(--cc-ink)}
+.tag.bad{background:#FBEAE4;border-color:#C2502A;color:#8A2B12}
+.tag.wait{background:var(--mac-bg);border-color:var(--mac);color:var(--mac-ink)}
+.arrive{animation:arrive 1.6s ease-out}
+@keyframes arrive{0%{background:var(--g-bg);transform:translateY(-4px)}100%{background:var(--soft);transform:none}}
+@media (prefers-reduced-motion:reduce){.arrive{animation:none}}
+
+.pot{height:14px;background:var(--soft);border:1px solid var(--line);border-radius:999px;overflow:hidden;display:flex}
+.pot i{display:block;height:100%;background:var(--cac)}
+.pot i:nth-child(even){background:var(--cac-ink)}
+.shock{background:#1C3344;color:#fff;border-radius:14px;padding:16px 18px;margin:0 0 14px}
+.shock h2{color:#fff}
+.shock .dl{background:rgba(255,255,255,.12);border-radius:8px;padding:6px 10px;display:inline-block;font-weight:700}
+.countdown{font-family:var(--serif);font-size:1.5rem;font-weight:700}
+.empty{color:var(--ink2);font-style:italic;padding:6px 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink2);font-size:.85rem}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.hl td{background:var(--cac-bg)}
+.scroll{overflow-x:auto}
+.ring{width:100%;max-width:420px;display:block;margin:0 auto}
+.ring text{font-family:var(--sans)}
+.netmap{width:100%;height:auto;display:block}
+.stance{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.stance button[aria-pressed="true"]{background:var(--g-ink);border-color:var(--g-ink);color:#fff}
+.phases{list-style:none;margin:0;padding:0}
+.phases li{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.phases li .num{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:.9rem;flex:none}
+.phases li.now .num{background:var(--ink);color:#fff;border-color:var(--ink)}
+.phases li.done .num{background:var(--soft);color:var(--ink2)}
+.phases li .lbl{flex:1}
+.notes{background:var(--soft);border-radius:10px;padding:10px 12px}
+.notes li{margin:4px 0}
+.code{font-family:var(--serif);font-size:3rem;font-weight:700;letter-spacing:.08em;line-height:1}
+.landing-hero{padding:40px 0 16px}
+.choose{display:grid;gap:12px}
+.choose button{display:block;width:100%;text-align:left;border-radius:14px;border:2px solid var(--g);background:#fff;padding:14px 16px;min-height:0}
+.choose button[aria-pressed="true"]{background:var(--g-bg)}
+.choose button strong{font-family:var(--serif);font-size:1.12rem;color:var(--g-ink);display:block}
+.choose button span{font-weight:400;display:block;font-size:.93rem;color:var(--ink)}
+.banner{background:var(--mac-bg);border:1px solid var(--mac);border-radius:10px;padding:8px 12px;font-size:.9rem;margin:0 0 14px}
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;display:grid;gap:8px;width:min(92vw,440px)}
+.toast{background:var(--ink);color:#fff;border-radius:12px;padding:10px 14px;font-weight:700;box-shadow:0 6px 24px rgba(28,51,68,.25);border-left:6px solid var(--g)}
+.secret-list .item{background:#fff}
+.chain{border-left:3px solid var(--line);margin-left:6px;padding-left:16px}
+.chain .step{position:relative;margin:0 0 14px}
+.chain .step::before{content:"";position:absolute;left:-23px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--g)}
+.debrief{border:2px solid var(--g);background:var(--g-bg)}
+.debrief li{margin:6px 0}
+.simcol{min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:32px;padding:3px 11px;font-size:.88rem;border-color:var(--g);color:var(--g-ink);background:#fff}
+.chip.on{background:var(--g-ink);color:#fff}
+.simframe{position:relative;overflow:auto;background:var(--paper)}
+.simframe.phone{height:660px;border:7px solid var(--ink);border-radius:26px}
+.simframe.phone .wrap{padding:12px}
+.simframe.phone h1{font-size:1.5rem}
+.simframe.hostframe{height:820px;border:1px solid var(--line);border-radius:14px}
+.simframe input,.simframe textarea,.simframe select,.simframe button{pointer-events:none}
+.simframe button[data-act=toggleRole]{pointer-events:auto}
+.narr{border-left:6px solid var(--g);background:var(--g-bg);border-radius:4px 12px 12px 4px;padding:10px 14px;margin-top:12px}
+.narr:not([data-g]){border-left-color:var(--ink);background:var(--soft)}
+.talk{font-family:var(--serif);font-style:italic;margin:0}
+.talk b{font-family:var(--sans);font-style:normal}
+.parts{margin:6px 0 0}
+.parts dt{font-size:.8rem;font-weight:700;color:var(--ink2);margin-top:6px}
+.parts dd{margin:0}
+.words{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.word{display:inline-block;border-radius:999px;padding:3px 12px;background:var(--g-bg);color:var(--g-ink);border:1px solid var(--g);font-weight:700;font-size:.92rem}
+.words.big .word{font-size:1.1rem;padding:5px 14px}
+.words.small .word{font-size:.8rem;padding:1px 9px}
+.round{border-left:5px solid var(--g)}
+.late{color:#B4361F !important;font-weight:700}
+.topbar .late{color:#FFD9CF !important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toasts" aria-live="polite"></div>
+<script>
+'use strict';
+/* =====================================================================
+   One Season of CPX
+   ---------------------------------------------------------------------
+   To run live across devices, paste your Supabase project URL and anon
+   key below (and run cpx-setup.sql in that project). Leave them empty to
+   run in demo mode, which syncs across tabs in one browser only.
+   ===================================================================== */
+const CONFIG = {
+  SUPABASE_URL: 'https://cpaliqxzinpehxqauesy.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwYWxpcXh6aW5wZWh4cWF1ZXN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzODExOTUsImV4cCI6MjEwNjk1NzE5NX0.grofJgHh35EewQCK2JpGaFx9qoz-VoZ1ntGlmj2b9U4'
+};
+
+const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY && window.supabase);
+const POT = 25000, TOKENS = 3;
+
+const GROUPS = {
+  cac: { name: 'Collective Action Circle', num: 1, focus: 'Local coordination',
+    intro: 'Your circle brings together local organizations in one neighborhood who work toward shared priorities.',
+    who: 'For place-based coalition work, neighborhood organizing, or local multi-organization collaboration.',
+    does: 'Eight local organizations in Eastside set shared priorities and decide together how to spend $25,000 in Innovation Investments.' },
+  mac: { name: 'Movement Alignment Circle', num: 2, focus: 'Cross-regional alignment',
+    intro: 'Your circle brings together delegates from three local circles in very different places, who learn from how each other works.',
+    who: 'For work across sites, regions, or issue areas.',
+    does: 'This is the Health Equity alignment circle. Delegates from three local circles working on health equity (Eastside, the Mississippi Delta, and the Central American highlands) exchange lessons about how their circles govern themselves: how they decide, who leads, and how they build trust. You adapt each other\u2019s practices and can share lessons from your own work.' },
+  cc: { name: 'Coordination Circle', num: 3, focus: 'Shared governance and grantmaking',
+    intro: 'Your circle governs the whole network: about nine local circles grouped into three alignment circles. Today you will hear directly from one of them, the Health Equity circle. The others are represented by their delegates in your room.',
+    who: 'For collective decision-making, peer funding, or network governance.',
+    does: 'You govern the whole network: about nine local circles grouped into three alignment circles (Health Equity, Racial Justice, and Democratic Voice). Today you will hear directly from one of them, the Health Equity circle, whose requests arrive during the season. The other two are represented by their delegates in this room. Together you set the rules for Rapid Response Grants by consent.' }
+};
+
+/* The three local circles that make up the Health Equity alignment circle */
+const MAC_CIRCLES = {
+  eastside: { name: 'Eastside', context: 'A mid-size U.S. city. Strong nonprofits, weak trust between long-time residents and newer immigrant families.' },
+  delta: { name: 'Mississippi Delta', context: 'A rural health cooperative circle. Small towns, long distances to the nearest clinic, and only a handful of member organizations.' },
+  highlands: { name: 'Central American highlands', context: 'A network of community health promoters in rural villages with little connectivity. Work happens in Spanish and two Mayan languages.' }
+};
+
+const ROLES = {
+  cac: [
+    { name: 'Eastside Neighbors United', kind: 'Backbone organization', power: 'backbone',
+      pub: 'You convene the circle this season. You facilitate, keep time, and make sure everyone is heard.',
+      hidden: 'Your main funder expects visible health outcomes this year, and your renewal depends on it.' },
+    { name: 'Riverbend Community Health', kind: 'Large health nonprofit, 40 staff',
+      pub: 'You have grant writers and can draft polished proposals quickly.',
+      hidden: 'An existing grant already covers most of what you would propose. Money from this pot would help you expand, not survive.' },
+    { name: 'Maple Court Tenants Union', kind: 'Volunteer-run tenant union',
+      pub: 'Everyone is a volunteer. Members meet in the evenings after work.',
+      hidden: 'A large landlord is preparing eviction filings across your buildings within weeks. You have not told the circle yet.' },
+    { name: 'Manos Unidas Mutual Aid', kind: 'Immigrant-led mutual aid network, joined last month',
+      pub: 'You are new to this circle and still learning how it works.',
+      hidden: 'Many of your members will not put their names on public documents. Any grant with a public report puts them at risk.' },
+    { name: 'Next Gen Organizers', kind: 'Youth-led organizing collective',
+      pub: 'Your leaders are 17 to 23 years old.',
+      hidden: 'Circle meetings happen at 2 p.m. on weekdays, when your leaders are in school or at work. You usually send one person.' },
+    { name: 'Greater Hope Food Pantry', kind: 'Faith-based food pantry',
+      pub: 'You feed about 400 families a week.',
+      hidden: 'Elders in the neighborhood trust you more than anyone else in the circle. No one has ever asked you to lead anything.' },
+    { name: 'Eastside Worker Center', kind: 'Worker center',
+      pub: 'You organize warehouse and home care workers.',
+      hidden: 'A strike is likely within the month. If it happens, families will need cash support fast.' },
+    { name: 'Access Now Collective', kind: 'Disability justice collective',
+      pub: 'Your members are disabled organizers and caregivers.',
+      hidden: 'The last three in-person meetings were in a building with a broken elevator. You stopped attending in person and nobody asked why.' }
+  ],
+  mac: [
+    { name: 'Riverbend delegate', circle: 'eastside', kind: 'Eastside circle, Riverbend Community Health',
+      hidden: 'Eastside usually sends staff from the larger organizations, like you. The smaller groups rarely get to come.' },
+    { name: 'Greater Hope delegate', circle: 'eastside', kind: 'Eastside circle, Greater Hope Food Pantry',
+      hidden: 'You are here because the backbone could not come. You are not sure what you are allowed to promise on Eastside\u2019s behalf.' },
+    { name: 'Next Gen delegate', circle: 'eastside', kind: 'Eastside circle, Next Gen Organizers',
+      hidden: 'When Eastside says \u201chealth,\u201d it usually means clinics. Your members mean mental health and feeling safe on the street.' },
+    { name: 'Promoters network delegate', circle: 'highlands', kind: 'Highlands circle, health promoters network',
+      hidden: 'Lessons from U.S. circles usually arrive in English, as slide decks. Most of your promoters never see them.' },
+    { name: 'Women\u2019s health collective delegate', circle: 'highlands', kind: 'Highlands circle, Indigenous women\u2019s health collective',
+      hidden: 'New rules in your country restrict foreign funding labeled \u201cadvocacy.\u201d Money described as health services is much safer.' },
+    { name: 'Health cooperative delegate', circle: 'delta', kind: 'Delta circle, rural health cooperative',
+      hidden: 'Two organizations left your circle this year because their staff burned out. You are quietly deciding whether CPX is worth your remaining members\u2019 time.' },
+    { name: 'Community health worker delegate', circle: 'delta', kind: 'Delta circle, community health worker program',
+      hidden: 'Your health workers already drive patients up to 60 miles to appointments. Every new idea sounds like more driving.' },
+    { name: 'Rural clinic delegate', circle: 'delta', kind: 'Delta circle, county free clinic',
+      hidden: 'The clinic\u2019s state contract ends next year. You need ideas that will still work without it.' }
+  ],
+  cc: [
+    { name: 'Root Change staff', kind: 'Fiscal agent and network support', power: 'agent',
+      pub: 'You hold the bank account and the compliance obligations for every grant.',
+      hidden: 'Auditors need documentation within 30 days of any payment. You can adopt a rule as fiscal agent without waiting for consent. That button is always on your screen.' },
+    { name: 'Health Equity representative', kind: 'Movement Alignment Circle representative',
+      pub: 'You speak for the health equity circles, including Eastside, the Mississippi Delta, and the Central American highlands.',
+      hidden: 'The health equity circles expect you to bring their requests here. You promised them you would.' },
+    { name: 'Racial Justice representative', kind: 'Movement Alignment Circle representative',
+      pub: 'You speak for the racial justice circles. Their most urgent need is fast legal defense funds when members face retaliation for organizing.',
+      hidden: 'Last year a grant process in your region was so slow that two organizations gave up on it.' },
+    { name: 'Democratic Voice representative', kind: 'Movement Alignment Circle representative',
+      pub: 'You speak for the democratic voice circles. Their most urgent need is safety and security for organizers during election season.',
+      hidden: 'Your groups worry that fast grants without peer review will go to whoever is best connected.' },
+    { name: 'Grassroots leader, U.S. South', kind: 'At-large member',
+      pub: 'You lead a small community organization.',
+      hidden: 'Your organization has no fiscal sponsor and no audited financials. Strict eligibility rules would shut you out.' },
+    { name: 'Grassroots leader, Latin America', kind: 'At-large member',
+      pub: 'You lead a community network outside the United States.',
+      hidden: 'International transfers take 7 to 10 days to clear in your country, whatever the rule says.' },
+    { name: 'Delta circle backbone lead', kind: 'At-large member',
+      pub: 'You coordinate the Mississippi Delta local circle.',
+      hidden: 'Your circle already runs a small emergency fund of its own. You are not sure a network-wide rule will be faster than what you have.' },
+    { name: 'Youth representative', kind: 'At-large member',
+      pub: 'Youth-led groups across the network nominated you.',
+      hidden: 'This is your first governance role. You are not sure you are allowed to object to Root Change.' }
+  ]
+};
+
+const PRIORITIES = ['Health access', 'Housing stability', 'Economic security', 'Safety and care', 'Civic voice'];
+const AMOUNTS = [2500, 5000, 7500, 10000];
+
+/* Governance lessons the Delta and highlands circles bring into the alignment circle.
+   Two draw on CPLI's restorative and regenerative practice (rotating out to rest,
+   a healing circle inspired by Fambul Tok) and two on sociocracy (consent with a
+   review date, nomination confirmed by consent). */
+const SEED_LESSONS = [
+  { id: 'seedD1', circle: 'delta', title: 'Rotate who leads, and rotate out to rest',
+    did: 'Hosting the circle passes to a different member organization every quarter, and whoever finishes a turn takes the next season off from coordinating.',
+    dep: 'Enough organizations to share the load, and agreement that rest is part of the work, not a break from it.',
+    fail: 'One organization couldn\u2019t host, felt ashamed, and quietly dropped out.' },
+  { id: 'seedD2', circle: 'delta', title: 'Consent with a review date',
+    did: 'A decision goes ahead when no one has an objection they can\u2019t live with, and every decision gets a date to revisit it.',
+    dep: 'A facilitator willing to ask for objections and wait for them.',
+    fail: 'People treated consent like consensus, and decisions stalled for months.' },
+  { id: 'seedH1', circle: 'highlands', title: 'Open hard decisions with a healing circle',
+    did: 'Before a hard decision, the circle sits together and each person names what is at stake for them and any past harm the decision touches. Nothing is decided in that round.',
+    dep: 'Time, and a form people already knew from their own traditions.',
+    fail: 'Visiting partners treated it as a warm-up and asked to skip it.' },
+  { id: 'seedH2', circle: 'highlands', title: 'Nominate each other, then confirm by consent',
+    did: 'Roles are filled by colleagues naming someone and saying why, followed by a consent round.',
+    dep: 'People feeling safe being named in front of others.',
+    fail: 'The same few people kept getting nominated, until the circle agreed to name someone new each time.' }
+];
+const VERDICT = { keep: 'Keep it', change: 'Change it', drop: 'Drop it' };
+
+const RULE = {
+  eligibility: { label: 'Who can request', opts: ['Any CPX member organization', 'Requests endorsed by their Collective Action Circle', 'Only organizations with a fiscal sponsor or 501(c)(3) status'] },
+  turnaround: { label: 'Decision within', opts: ['48 hours', '1 week', '30 days'] },
+  max: { label: 'Largest grant', opts: ['$2,500', '$5,000', '$10,000'] },
+  review: { label: 'Who decides', opts: ['Three peer reviewers from other circles', 'The Coordination Circle, by consent', 'Root Change staff, with peers notified'] },
+  reporting: { label: 'Reporting', opts: ['A voice memo or short story', 'A one-page form', 'A full narrative report with receipts'] },
+  covers: { label: 'What grants can pay for', opts: ['Urgent campaign costs only', 'Campaign costs plus organizer wellness and safety'] }
+};
+
+const PHASES = [
+  { k: 'lobby', label: 'Gathering', sub: 'Everyone joins, reads their role, and shares an opening word', min: 5,
+    notes: ['Post each group\u2019s join link in its breakout room chat.', 'Invite everyone to answer the opening round: in a word or two, how are you feeling right now?', 'Give everyone a minute to read their role. Whether they share what only they know is up to them.'] },
+  { k: 'build', label: 'Build', sub: 'Set priorities and rules', min: 15,
+    notes: ['Collective Action Circle: propose ideas, then vote with three votes each. Every proposal goes straight onto the ballot.', 'Movement Alignment Circle: pick a governance lesson from another circle and decide whether to keep, change, or drop it. Anyone can add a lesson from their own work.', 'Coordination Circle: draft a rule for Rapid Response Grants and try to reach consent.'] },
+  { k: 'flow', label: 'Win', sub: 'Lessons travel', min: 10,
+    notes: ['The local circle writes what it learned about how it made decisions. It goes to the alignment circle.', 'The alignment circle adapts it and sends requests up to the Coordination Circle.', 'The Coordination Circle replies and finishes adopting its rule.'] },
+  { k: 'sustain', label: 'Sustain', sub: 'Keep it going', min: 10,
+    notes: ['No crisis. Each circle decides how its work continues into next season, and how to care for the people doing it.', 'Collective Action Circle: choose the next backbone, and say what would help everyone avoid burning out.', 'Movement Alignment Circle: choose one lesson to keep working on. Coordination Circle: decide whether the rule cares for the people doing the work.'] },
+  { k: 'reveal', label: 'Look back', sub: 'See the whole season', min: 0,
+    notes: ['Invite everyone to add one closing word on their screen. The words appear at the top of this view.', 'Screen-share this view. Start with the closing words and what people knew but never said, then the power table and the chain.', 'Send groups back to the second lens: how does your own collaboration compare?'] }
+];
+
+/* What each breakout facilitator sees, by phase and room */
+const GUIDE_NOTES = {
+  lobby: {
+    cac: ['Welcome people, and check everyone joined with the Group 1 link.', 'Before Build starts, choose who plays the backbone: someone ready to facilitate. Use \u201cChoose the backbone\u201d below.', 'Invite a spoken opening round: what experience do you bring that is close to what CPX is designed to address? Then each person adds a word or two in the app.', 'Remind people that each role holds something only they know. Sharing it is their choice.'],
+    mac: ['Welcome people, and check everyone joined with the Group 2 link.', 'Invite a spoken opening round: what experience do you bring that is close to what CPX is designed to address? Then each person adds a word or two in the app.', 'Point out that delegates come from three different local circles. Each role card describes their circle.'],
+    cc: ['Welcome people, and check everyone joined with the Group 3 link.', 'Explain who you govern: about nine local circles in three alignment circles. Only the Health Equity circle sends requests directly today; the other two are represented by their delegates in the room.', 'Invite a spoken opening round: what experience do you bring that is close to what CPX is designed to address? Then each person adds a word or two in the app.', 'Remind people that each role holds something only they know. Sharing it is their choice.']
+  },
+  build: {
+    cac: ['Invite ideas out loud before people type them. Every proposal goes straight onto the ballot.', 'Before voting, ask who hasn\u2019t spoken yet. The backbone role facilitates; support them rather than replacing them.', 'Each person has three votes. Watch the running totals together.'],
+    mac: ['Ask each delegate to say which circle they come from, so others know where they\u2019re speaking from.', 'Each person picks a lesson from another circle and chooses keep, change, or drop. Ask \u201cwhy?\u201d before they type.', 'Invite anyone to share a real lesson from their own work.'],
+    cc: ['Someone drafts a rule. Then go around: consent, consent with a concern, or object. An objection needs a reason.', 'If there\u2019s an objection, ask for an amendment that answers it rather than a vote.', 'Notice whether Root Change staff uses the fiscal agent button, and whether anyone asks them not to.']
+  },
+  flow: {
+    cac: ['Ask: what did you learn about how this circle made decisions? Not what you funded.', 'Help the group send one or two lessons: what you did, what it depended on, what nearly went wrong.', 'Watch \u201cArrived from other circles\u201d for the alignment circle\u2019s responses and the Coordination Circle\u2019s rule.'],
+    mac: ['The Eastside lesson arrives at the top of everyone\u2019s screen. Read it aloud.', 'Respond to it: keep, change, or drop, and why.', 'Agree on one or two requests to send to the Coordination Circle.'],
+    cc: ['Finish adopting the rule if you haven\u2019t yet.', 'Requests from the alignment circle arrive here. Discuss each one and reply.', 'Ask: did anyone\u2019s concern get lost on the way to consent?']
+  },
+  sustain: {
+    cac: ['Ask who should convene next season, and why, before anyone clicks.', 'Hold the burnout question as a real conversation: what would help the next backbone, and everyone else, keep going?', 'Save the last minutes for \u201chow did that feel?\u201d'],
+    mac: ['Choose one lesson to carry forward. Disagreement is fine.', 'Ask what would keep it moving between three very different circles.', 'Save the last minutes for \u201chow did that feel?\u201d'],
+    cc: ['Review the rule: would you keep it, and does it care for the people doing the work?', 'If people want to change it, propose a revision and test it for consent.', 'Save the last minutes for \u201chow did that feel?\u201d']
+  }
+};
+
+const SHARED_Q = 'Where did care and healing show up this season, and where did the task squeeze them out?';
+const DEBRIEF = {
+  cac: { title: 'For the Collective Action Circle', qs: [
+    'Who held power in your circle this season, and how did that happen?',
+    'Which hidden contexts never made it into the room? What would have brought them in?',
+    'Who did you choose as the next backbone, and what would it take for coordination to feel shared rather than managed?' ] },
+  mac: { title: 'For the Movement Alignment Circle', qs: [
+    'Which governance practice changed most as it traveled, and which just got repeated?',
+    'What did your circle have, or lack, that a practice depended on?',
+    'Which lesson from someone\u2019s real work would you actually try at home?' ] },
+  cc: { title: 'For the Coordination Circle', qs: [
+    'Whose voice was in the room, and whose wasn\u2019t?',
+    'Where did decision-making quietly recentralize, and where did it stay shared?',
+    'Would the rule you adopted work for the smallest organizations in the network?',
+    'What made the process feel legitimate, and what made it feel like a burden?' ] }
+};
+
+/* ------------------------------ utilities ------------------------------ */
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = n => '$' + Math.round(n || 0).toLocaleString('en-US');
+const clip = (s, n) => String(s || '').trim().slice(0, n);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const mmss = ms => { ms = Math.max(0, ms); const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+// Identity: per device when live; per tab in demo mode so several tabs can play
+const idStore = {
+  get(k) { try { return (LIVE ? localStorage : sessionStorage).getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { (LIVE ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} }
+};
+
+/* ------------------------------ transport ------------------------------ */
+let sb = null;
+if (LIVE) { try { sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY); } catch (e) { console.error(e); } }
+const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('cpx-season-demo') : null;
+const dkey = room => 'cpx-demo-events:' + room;
+function demoGet(room) { try { return JSON.parse(store.get(dkey(room)) || '[]').map(norm); } catch (e) { return []; } }
+function norm(e) { return { id: e.id, pid: e.pid, type: e.type, payload: e.payload || {}, ts: Date.parse(e.created_at) || Date.now() }; }
+
+const T = {
+  async load(room, afterId) {
+    if (LIVE) {
+      let q = sb.from('cpx_events').select('*').eq('room', room).order('id', { ascending: true }).limit(5000);
+      if (afterId) q = q.gt('id', afterId);
+      const { data, error } = await q;
+      if (error) throw error;
+      return data.map(norm);
+    }
+    return demoGet(room);
+  },
+  async send(room, pid, type, payload) {
+    if (LIVE) {
+      const { data, error } = await sb.from('cpx_events').insert({ room, pid, type, payload }).select().single();
+      if (error) throw error;
+      return norm(data);
+    }
+    let raw = [];
+    try { raw = JSON.parse(store.get(dkey(room)) || '[]'); } catch (e) {}
+    const ev = { id: 'd' + uid(), room, pid, type, payload, created_at: new Date().toISOString() };
+    raw.push(ev);
+    store.set(dkey(room), JSON.stringify(raw));
+    if (bc) bc.postMessage({ room });
+    return norm(ev);
+  },
+  subscribe(room, cb) {
+    if (LIVE) {
+      sb.channel('cpx-' + room)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'cpx_events', filter: 'room=eq.' + room }, m => cb([norm(m.new)]))
+        .subscribe();
+      setInterval(async () => { try { cb(await T.load(room, S.lastId)); } catch (e) {} }, 6000);
+    } else {
+      if (bc) bc.onmessage = m => { if (m.data && m.data.room === room) cb(demoGet(room)); };
+      window.addEventListener('storage', e => { if (e.key === dkey(room)) cb(demoGet(room)); });
+    }
+  }
+};
+
+/* ------------------------------ reducer ------------------------------ */
+function emptyGame() {
+  return {
+    hostPid: null, phase: 'lobby', phaseAt: null,
+    players: {}, order: { cac: [], mac: [], cc: [] }, open: {}, close: {}, guides: {}, signals: {},
+    cac: { props: [], votes: {}, lessons: [], next: {}, carry: [] },
+    mac: { adapts: [], own: [], reqs: [], keep: {}, plans: [] },
+    cc: { rules: [], resp: {}, adoptions: [], adopted: null, replies: [], review: {} },
+    log: []
+  };
+}
+const roleOf = p => p ? ROLES[p.group][p.role] : null;
+const ccVoters = G => G.order.cc.map(id => G.players[id]);
+const myVotes = (G, pid) => G.cac.votes[pid] || {};
+function tokensUsed(G, pid) { const v = myVotes(G, pid); return Object.keys(v).reduce((a, k) => a + (G.cac.props.some(p => p.id === k) ? v[k] : 0), 0); }
+const isAdopted = (G, ruleId) => G.cc.adoptions.some(a => a.ruleId === ruleId);
+const currentRule = G => G.cc.rules.length ? G.cc.rules[G.cc.rules.length - 1] : null;
+const pendingRule = G => { const r = currentRule(G); return r && !isAdopted(G, r.id) ? r : null; };
+const adoptedRule = G => G.cc.adopted ? G.cc.rules.find(r => r.id === G.cc.adopted.ruleId) : null;
+const pname = (G, pid) => { const p = G.players[pid]; return p ? roleOf(p).name : 'Someone'; };
+const macCircleOf = (G, pid) => { const p = G.players[pid]; return p ? MAC_CIRCLES[roleOf(p).circle].name : ''; };
+const tally = obj => { const t = {}; Object.values(obj).forEach(x => { t[x] = (t[x] || 0) + 1; }); return t; };
+
+function consentStatus(G, ruleId) {
+  const voters = ccVoters(G), r = G.cc.resp[ruleId] || {};
+  let consent = 0, concern = 0, object = 0;
+  voters.forEach(p => { const x = r[p.pid]; if (!x) return; if (x.stance === 'consent') consent++; else if (x.stance === 'concern') concern++; else object++; });
+  const responded = consent + concern + object, need = Math.max(1, Math.ceil(voters.length / 2));
+  return { consent, concern, object, responded, need, voters: voters.length, ok: voters.length > 0 && object === 0 && responded >= need };
+}
+
+function reduce(evs) {
+  const G = emptyGame();
+  const log = (e, g, text) => G.log.push({ ts: e.ts, pid: e.pid, g, text });
+  for (const e of evs) {
+    const p = e.payload || {}, me = G.players[e.pid], role = roleOf(me), ph = G.phase, id = String(e.id);
+    const inG = g => me && me.group === g;
+    switch (e.type) {
+      case 'create': if (!G.hostPid) G.hostPid = e.pid; break;
+      case 'phase':
+        if (e.pid === G.hostPid && PHASES.some(x => x.k === p.phase)) { G.phase = p.phase; G.phaseAt = e.ts; }
+        break;
+      case 'join':
+        if (!G.players[e.pid] && GROUPS[p.group] && e.pid !== G.hostPid) {
+          const seat = G.order[p.group].length, ri = seat % ROLES[p.group].length;
+          G.order[p.group].push(e.pid);
+          G.players[e.pid] = { pid: e.pid, name: clip(p.name, 40) || 'Guest', group: p.group, role: ri, seat, at: e.ts };
+          log(e, p.group, clip(p.name, 40) + ' joined as ' + ROLES[p.group][ri].name);
+        } break;
+
+      /* Breakout facilitators */
+      case 'guide_join':
+        if (!G.players[e.pid] && !G.guides[e.pid] && GROUPS[p.group] && e.pid !== G.hostPid)
+          G.guides[e.pid] = { pid: e.pid, name: clip(p.name, 40) || 'Facilitator', group: p.group };
+        break;
+      case 'guide_assign': {
+        // The Group 1 breakout facilitator chooses who plays the backbone; that person swaps roles with whoever had it
+        const gd = G.guides[e.pid], target = G.players[p.pid];
+        if (gd && gd.group === 'cac' && ph === 'lobby' && target && target.group === 'cac' && target.role !== 0) {
+          const holder = G.order.cac.map(id => G.players[id]).find(x => x.role === 0);
+          if (holder) holder.role = target.role;
+          target.role = 0;
+          G.assigned = { pid: target.pid, prev: holder ? holder.pid : null, ts: e.ts };
+          log(e, 'cac', gd.name + ' chose ' + target.name + ' to play the backbone');
+        }
+        break; }
+      case 'guide_signal': {
+        const gd = G.guides[e.pid];
+        if (gd && (p.kind === 'more' || p.kind === 'ready')) G.signals[gd.group] = { kind: p.kind, ts: e.ts, phase: ph, by: gd.name };
+        break; }
+
+      /* Opening and closing rounds, in every room */
+      case 'open_word':
+        if (me && (ph === 'lobby' || ph === 'build') && clip(p.text, 60)) G.open[e.pid] = { text: clip(p.text, 60), at: e.ts };
+        break;
+      case 'close_word':
+        if (me && ph === 'reveal' && clip(p.text, 60)) G.close[e.pid] = { text: clip(p.text, 60), at: e.ts };
+        break;
+
+      /* Collective Action Circle */
+      case 'cac_prop':
+        if (inG('cac') && ph === 'build' && clip(p.title, 120)) {
+          const amount = AMOUNTS.includes(+p.amount) ? +p.amount : 5000;
+          G.cac.props.push({ id, pid: e.pid, title: clip(p.title, 120), amount, priority: PRIORITIES.includes(p.priority) ? p.priority : PRIORITIES[0], at: e.ts });
+          log(e, 'cac', role.name + ' proposed \u201c' + clip(p.title, 120) + '\u201d (' + money(amount) + ')');
+        } break;
+      case 'cac_vote': {
+        const pr = G.cac.props.find(x => x.id === p.id);
+        if (pr && inG('cac') && ph === 'build') {
+          const v = G.cac.votes[e.pid] = G.cac.votes[e.pid] || {};
+          if (p.delta > 0 && tokensUsed(G, e.pid) < TOKENS) v[p.id] = (v[p.id] || 0) + 1;
+          if (p.delta < 0 && v[p.id] > 0) v[p.id]--;
+        } break; }
+      case 'cac_lesson':
+        if (inG('cac') && (ph === 'flow' || ph === 'sustain') && clip(p.did, 400)) {
+          G.cac.lessons.push({ id, pid: e.pid, did: clip(p.did, 400), dep: clip(p.dep, 300), fail: clip(p.fail, 300), at: e.ts });
+          log(e, 'cac', role.name + ' sent a lesson to the alignment circle');
+        } break;
+      case 'cac_next':
+        if (inG('cac') && ph === 'sustain' && G.players[p.org] && G.players[p.org].group === 'cac') {
+          G.cac.next[e.pid] = p.org;
+          log(e, 'cac', role.name + ' chose ' + pname(G, p.org) + ' as the next backbone');
+        } break;
+      case 'cac_carry':
+        if (inG('cac') && ph === 'sustain' && clip(p.text, 600)) {
+          G.cac.carry.push({ id, pid: e.pid, text: clip(p.text, 600), at: e.ts });
+          log(e, 'cac', role.name + ' said what would help the circle avoid burnout');
+        } break;
+
+      /* Movement Alignment Circle */
+      case 'mac_adapt':
+        if (inG('mac') && (ph === 'build' || ph === 'flow') && VERDICT[p.verdict] && (p.verdict === 'keep' || clip(p.text, 600))) {
+          G.mac.adapts.push({ id, pid: e.pid, lessonId: String(p.lessonId), verdict: p.verdict, text: clip(p.text, 600), at: e.ts });
+          log(e, 'mac', role.name + ' would ' + p.verdict + ' a lesson');
+        } break;
+      case 'mac_own':
+        if (inG('mac') && (ph === 'build' || ph === 'flow') && clip(p.title, 100) && clip(p.did, 400)) {
+          G.mac.own.push({ id, pid: e.pid, title: clip(p.title, 100), did: clip(p.did, 400), dep: clip(p.dep, 300), fail: clip(p.fail, 300), at: e.ts });
+          log(e, 'mac', role.name + ' shared a lesson from their own work');
+        } break;
+      case 'mac_req':
+        if (inG('mac') && (ph === 'flow' || ph === 'sustain') && clip(p.text, 600)) {
+          G.mac.reqs.push({ id, pid: e.pid, text: clip(p.text, 600), at: e.ts });
+          log(e, 'mac', role.name + ' sent a request to the Coordination Circle');
+        } break;
+      case 'mac_keep':
+        if (inG('mac') && ph === 'sustain' && p.lessonId) {
+          G.mac.keep[e.pid] = String(p.lessonId);
+          log(e, 'mac', role.name + ' chose a lesson to keep');
+        } break;
+      case 'mac_plan':
+        if (inG('mac') && ph === 'sustain' && clip(p.text, 600)) {
+          G.mac.plans.push({ id, pid: e.pid, text: clip(p.text, 600), at: e.ts });
+          log(e, 'mac', role.name + ' said what would keep a lesson moving');
+        } break;
+
+      /* Coordination Circle */
+      case 'cc_rule':
+        if (inG('cc') && ['build', 'flow', 'sustain'].includes(ph)) {
+          const opts = {};
+          Object.keys(RULE).forEach(k => { const i = +(p.opts || {})[k]; opts[k] = (i >= 0 && i < RULE[k].opts.length) ? i : 0; });
+          G.cc.rules.push({ id, pid: e.pid, opts, at: e.ts, revision: G.cc.adoptions.length > 0 });
+          log(e, 'cc', role.name + (G.cc.adoptions.length ? ' proposed a revision to the rule' : ' proposed a rapid response rule'));
+        } break;
+      case 'cc_resp': {
+        const ru = pendingRule(G);
+        if (ru && ru.id === p.ruleId && inG('cc') && ['consent', 'concern', 'object'].includes(p.stance)) {
+          (G.cc.resp[ru.id] = G.cc.resp[ru.id] || {})[e.pid] = { stance: p.stance, reason: clip(p.reason, 300), at: e.ts };
+          if (p.stance === 'object') log(e, 'cc', role.name + ' objected' + (p.reason ? ': \u201c' + clip(p.reason, 300) + '\u201d' : ''));
+        } break; }
+      case 'cc_adopt': {
+        const ru = pendingRule(G);
+        if (ru && ru.id === p.ruleId && inG('cc')) {
+          const ok = (p.mode === 'consent' && consentStatus(G, ru.id).ok) || (p.mode === 'agent' && role.power === 'agent');
+          if (ok) {
+            const a = { ruleId: ru.id, mode: p.mode, pid: e.pid, at: e.ts, phase: ph, snapshot: consentStatus(G, ru.id) };
+            G.cc.adoptions.push(a); G.cc.adopted = a;
+            log(e, 'cc', (ru.revision ? 'Revised rule' : 'Rule') + ' adopted ' + (p.mode === 'agent' ? 'by Root Change staff as fiscal agent' : 'by consent'));
+          }
+        } break; }
+      case 'cc_reply': {
+        const rq = G.mac.reqs.find(r => r.id === p.reqId);
+        if (rq && inG('cc') && clip(p.text, 600)) {
+          G.cc.replies.push({ id, pid: e.pid, reqId: rq.id, text: clip(p.text, 600), at: e.ts });
+          log(e, 'cc', role.name + ' replied to the alignment circle');
+        } break; }
+      case 'cc_review':
+        if (inG('cc') && ph === 'sustain' && G.cc.adopted && ['keep', 'change'].includes(p.stance)) {
+          G.cc.review[e.pid] = { stance: p.stance, reason: clip(p.reason, 300), at: e.ts };
+        } break;
+    }
+  }
+  return G;
+}
+
+function funding(G) {
+  const t = {};
+  Object.values(G.cac.votes).forEach(v => Object.keys(v).forEach(k => { t[k] = (t[k] || 0) + v[k]; }));
+  const ballot = G.cac.props.map(p => Object.assign({}, p, { votes: t[p.id] || 0 })).sort((a, b) => b.votes - a.votes || a.at - b.at);
+  let left = POT;
+  ballot.forEach(p => { p.funded = p.votes > 0 && p.amount <= left; if (p.funded) left -= p.amount; });
+  return { ballot, left };
+}
+/* All governance lessons on the table: seeded ones, ones delegates share from
+   their own work, and (from Win on) the Eastside circle's own lessons */
+function allLessons(G, includeLocal) {
+  const seeds = SEED_LESSONS.map(l => Object.assign({ origin: 'seed', from: MAC_CIRCLES[l.circle].name + ' circle' }, l));
+  const own = G.mac.own.map(l => ({ id: l.id, origin: 'own', pid: l.pid, from: (G.players[l.pid] ? G.players[l.pid].name : 'A delegate') + '\u2019s own work', title: l.title, did: l.did, dep: l.dep, fail: l.fail }));
+  const local = includeLocal ? G.cac.lessons.map(l => ({ id: l.id, origin: 'cac', pid: l.pid, from: 'Eastside circle, ' + pname(G, l.pid), title: 'How Eastside decided', did: l.did, dep: l.dep, fail: l.fail })) : [];
+  return local.concat(seeds, own);
+}
+const lessonById = (G, id) => allLessons(G, true).find(l => l.id === id);
+const lessonParts = l => `<dl class="parts"><dt>What they did</dt><dd>${esc(l.did)}</dd>${l.dep ? `<dt>What it depended on</dt><dd>${esc(l.dep)}</dd>` : ''}${l.fail ? `<dt>What nearly failed</dt><dd>${esc(l.fail)}</dd>` : ''}</dl>`;
+const adaptTags = a => `<span class="tag ${a.verdict === 'keep' ? 'ok' : a.verdict === 'drop' ? 'bad' : 'wait'}">${VERDICT[a.verdict]}</span>`;
+function arrivals(G, g) {
+  const out = [], rule = r => ruleList(r.opts);
+  if (g === 'cac' || g === 'mac') G.cc.adoptions.forEach(a => { const r = G.cc.rules.find(x => x.id === a.ruleId);
+    out.push({ id: a.ruleId, o: 'cc', at: a.at, title: 'The Coordination Circle adopted ' + (r.revision ? 'a revised' : 'a') + ' rule for Rapid Response Grants', body: rule(r), meta: a.mode === 'agent' ? 'Adopted by Root Change staff as fiscal agent' : 'Adopted by consent' }); });
+  if (g === 'cac') G.mac.adapts.forEach(a => { const l = G.cac.lessons.find(x => x.id === a.lessonId); if (!l) return;
+    out.push({ id: a.id, o: 'mac', at: a.at, title: 'The ' + macCircleOf(G, a.pid) + ' circle responded to your lesson', body: adaptTags(a) + (a.text ? '<div class="mt">' + esc(a.text) + '</div>' : ''), meta: pname(G, a.pid) + ', about: \u201c' + l.did.slice(0, 90) + (l.did.length > 90 ? '\u2026' : '') + '\u201d' }); });
+  if (g === 'mac') {
+    G.cac.lessons.forEach(l => out.push({ id: l.id, o: 'cac', at: l.at, title: 'A lesson arrived from the Eastside circle', body: lessonParts(l), meta: pname(G, l.pid) + '. You can adapt it below.' }));
+    G.cc.replies.forEach(r => { const q = G.mac.reqs.find(x => x.id === r.reqId);
+      out.push({ id: r.id, o: 'cc', at: r.at, title: 'The Coordination Circle replied to your request', body: esc(r.text), meta: pname(G, r.pid) + ', responding to: \u201c' + q.text.slice(0, 90) + (q.text.length > 90 ? '\u2026' : '') + '\u201d' }); });
+  }
+  return out.sort((a, b) => b.at - a.at);
+}
+
+/* ------------------------------ app state ------------------------------ */
+const S = { room: null, pid: null, host: false, events: [], ids: new Set(), G: emptyGame(), loaded: false, lastId: 0, circle: null,
+  ui: { roleOpen: true, choose: null, joinErr: '', err: '' }, fresh: new Set() };
+
+function ingest(list) {
+  const added = [];
+  for (const e of list) {
+    if (S.ids.has(e.id)) continue;
+    S.ids.add(e.id); S.events.push(e); added.push(e);
+    if (typeof e.id === 'number' && e.id > S.lastId) S.lastId = e.id;
+  }
+  if (!added.length && S.loaded) return;
+  S.events.sort((a, b) => (a.ts - b.ts) || (typeof a.id === 'number' && typeof b.id === 'number' ? a.id - b.id : String(a.id) < String(b.id) ? -1 : 1));
+  S.G = reduce(S.events);
+  if (S.loaded) added.forEach(notify);
+  render();
+}
+
+function notify(e) {
+  if (e.pid === S.pid || S.rehearsal) return;
+  const me = S.G.players[S.pid], g = me ? me.group : null, p = e.payload || {};
+  let text = null;
+  if (e.type === 'phase') { const ph = PHASES.find(x => x.k === p.phase); text = ph ? 'New phase: ' + ph.label : null; }
+  else if (e.type === 'guide_assign' && p.pid === S.pid) text = 'Your facilitator chose you to play the backbone: ' + ROLES.cac[0].name + '. Your role card has changed.';
+  else if (e.type === 'guide_assign' && S.G.assigned && S.G.assigned.prev === S.pid && S.G.players[S.pid]) text = 'Your role has changed. You are now ' + roleOf(S.G.players[S.pid]).name + '.';
+  else if (e.type === 'guide_signal' && S.host) { const gd = S.G.guides[e.pid]; if (gd) text = 'Group ' + GROUPS[gd.group].num + (p.kind === 'more' ? ' asks for 2 more minutes' : ' is ready for the next phase'); }
+  else if (e.type === 'cac_lesson' && g === 'mac') text = 'A lesson arrived from the Eastside circle';
+  else if (e.type === 'mac_req' && g === 'cc') text = 'The alignment circle sent you a request';
+  else if (e.type === 'cc_adopt' && (g === 'cac' || g === 'mac')) text = 'The Coordination Circle adopted a rule';
+  else if (e.type === 'cc_reply' && g === 'mac') text = 'The Coordination Circle replied to you';
+  else if (e.type === 'mac_adapt' && g === 'cac' && S.G.cac.lessons.some(l => l.id === String(p.lessonId))) text = 'The alignment circle responded to your lesson';
+  if (!text) return;
+  const key = e.type === 'cc_adopt' ? String(p.ruleId) : String(e.id);
+  S.fresh.add(key); setTimeout(() => S.fresh.delete(key), 2500);
+  toast(text, g);
+}
+function toast(text, g) {
+  const box = document.getElementById('toasts'), el = document.createElement('div');
+  el.className = 'toast'; if (g) el.setAttribute('data-g', g); el.textContent = text;
+  box.appendChild(el); setTimeout(() => el.remove(), 4200);
+}
+const fr = id => S.fresh.has(String(id)) ? ' arrive' : '';
+
+async function send(type, payload) {
+  if (S.rehearsal) return;
+  try { const ev = await T.send(S.room, S.pid, type, payload || {}); ingest([ev]); }
+  catch (err) { console.error(err); toast('That did not go through. Check your connection and try again.'); }
+}
+
+function setUrl() {
+  const q = new URLSearchParams(); q.set('room', S.room); if (S.circle) q.set('circle', S.circle); if (S.guide) q.set('role', 'facilitator');
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+async function enterRoom(room) {
+  S.room = room.toUpperCase(); S.loaded = false; render(); setUrl();
+  // A tab can hold its own test identity, so the lead can try a participant link in their own browser
+  let tabPid = null; try { tabPid = sessionStorage.getItem('cpx-tabpid:' + S.room); } catch (e) {}
+  S.pid = tabPid || idStore.get('cpx-pid:' + S.room) || ('p' + uid());
+  if (!tabPid) idStore.set('cpx-pid:' + S.room, S.pid);
+  try { ingest(await T.load(S.room)); }
+  catch (err) { console.error(err); S.ui.err = 'Could not reach the session server. Check the Supabase settings or your connection.'; }
+  S.loaded = true; S.host = S.G.hostPid === S.pid;
+  if (S.host && S.circle) S.ui.leadLink = true;
+  else if (S.host) { S.circle = null; setUrl(); }
+  T.subscribe(S.room, ingest);
+  render();
+}
+async function createRoom() {
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let code = ''; for (let i = 0; i < 4; i++) code += letters[Math.floor(Math.random() * letters.length)];
+  const pid = 'h' + uid();
+  idStore.set('cpx-pid:' + code, pid);
+  S.room = code; S.pid = pid;
+  try { await T.send(code, pid, 'create', {}); } catch (err) { console.error(err); toast('Could not create the session. Check the Supabase settings.'); return; }
+  enterRoom(code);
+}
+const joinLink = (g, guide) => location.origin + location.pathname + '?room=' + S.room + '&circle=' + g + (guide ? '&role=facilitator' : '');
+
+/* ------------------------------ rendering ------------------------------ */
+function render() {
+  const app = document.getElementById('app');
+  const keep = {}; app.querySelectorAll('input[id],textarea[id],select[id]').forEach(el => { keep[el.id] = el.value; });
+  const ae = document.activeElement, aid = ae && ae.id, sel = (ae && 'selectionStart' in ae) ? [ae.selectionStart, ae.selectionEnd] : null;
+  app.innerHTML = view();
+  if (S.rehearsal) document.querySelectorAll('.simframe.phone').forEach(f => { const a = f.querySelector('.arrive'); f.scrollTop = a ? Math.max(0, a.offsetTop - 80) : 0; });
+  Object.keys(keep).forEach(id => { const el = document.getElementById(id); if (el && el.dataset.reset !== '1') el.value = keep[id]; });
+  if (aid) { const el = document.getElementById(aid); if (el) { el.focus(); if (sel && el.setSelectionRange) { try { el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } } }
+  tick();
+}
+
+function view() {
+  if (S.rehearsal) return rehearsalView();
+  if (!S.room) return landing();
+  if (!S.loaded) return '<div class="wrap"><p class="muted">Opening session ' + esc(S.room) + '\u2026</p></div>';
+  if (S.ui.err) return '<div class="wrap"><div class="card"><h2>Session unavailable</h2><p>' + esc(S.ui.err) + '</p></div></div>';
+  if (!S.G.hostPid) return '<div class="wrap"><div class="card"><h2>No session with code ' + esc(S.room) + '</h2><p>Check the link with your facilitator.</p><button data-act="home">Enter a different code</button></div></div>';
+  if (S.host && S.ui.leadLink) return leadLinkView();
+  if (S.host) return hostView();
+  if (S.G.guides[S.pid]) return guideView(S.G.guides[S.pid]);
+  const me = S.G.players[S.pid];
+  return me ? playerView(me) : joinView();
+}
+
+function demoBanner() {
+  if (S.rehearsal || LIVE) return '';
+  return '<div class="banner"><b>Demo mode.</b> This only syncs between tabs in this browser. Add Supabase settings to the file to run it across devices.</div>';
+}
+
+function landing() {
+  return `<div class="wrap">
+    <div class="landing-hero">
+      <h1>One Season of CPX</h1>
+      <p class="muted" style="max-width:56ch">A short simulation of the Community Power Exchange. Three circles, one season, and the moments where power, learning, and money move between them.</p>
+    </div>
+    ${demoBanner()}
+    <div class="card">
+      <h2>Join a session</h2>
+      <label for="j-code">Session code</label>
+      <input id="j-code" maxlength="8" autocomplete="off" autocapitalize="characters" placeholder="e.g. KMRT" style="text-transform:uppercase;max-width:220px">
+      <div class="mt"><button class="primary" data-act="joinCode">Join session</button></div>
+    </div>
+    <div class="card">
+      <h2>Facilitating?</h2>
+      <p class="muted">Start a session and post each group\u2019s join link in its breakout room.</p>
+      <button data-act="create">Start a new session</button>
+    </div>
+    <div class="card">
+      <h2>See how a season unfolds</h2>
+      <p class="muted">Step through a rehearsal with 24 simulated participants, eight in each breakout room, and see every person\u2019s screen.</p>
+      <button data-act="rehearse">Watch a rehearsal</button>
+    </div>
+  </div>`;
+}
+
+function leadLinkView() {
+  const g = S.circle;
+  return `<div class="wrap" data-g="${g}"><div class="landing-hero" style="padding-top:24px"><h1>One Season of CPX</h1></div>
+    <div class="card"><h2>You\u2019re the lead facilitator in this browser</h2>
+      <p>This is ${S.guide ? 'the breakout facilitator' : 'a participant'} link for <b>Group ${GROUPS[g].num}: the ${GROUPS[g].name}</b>. Because you started this session in this browser, the app recognizes you as the lead.</p>
+      <p class="muted">To see exactly what ${S.guide ? 'a breakout facilitator' : 'a participant'} sees, you can join as a test ${S.guide ? 'facilitator' : 'participant'} in this tab. Your facilitator view stays the same in your other tab. A private window, another browser, or your phone works too.</p>
+      <div class="row mt">
+        <button class="primary" data-act="testJoin">Join as a test ${S.guide ? 'facilitator' : 'participant'} in this tab</button>
+        <button data-act="backToLead">Go to my facilitator view</button>
+      </div></div></div>`;
+}
+function joinView() {
+  const fixed = GROUPS[S.circle] ? S.circle : null, c = fixed || S.ui.choose;
+  if (S.guide && fixed) return `<div class="wrap" data-g="${fixed}">
+    <div class="landing-hero" style="padding-top:24px"><h1>One Season of CPX</h1>
+      <p style="font-size:1.1rem">You\u2019re joining as the <b>breakout facilitator for Group ${GROUPS[fixed].num}: the ${GROUPS[fixed].name}</b>.</p></div>
+    ${demoBanner()}
+    <div class="card">
+      <p>You\u2019ll see the countdown, what to say in each phase, and who hasn\u2019t acted yet. You won\u2019t have a role or a vote.</p>
+      <label for="j-name">Your first name</label>
+      <input id="j-name" maxlength="40" autocomplete="given-name" style="max-width:320px">
+      ${S.ui.joinErr ? '<p style="color:#8A2B12;font-weight:700">' + esc(S.ui.joinErr) + '</p>' : ''}
+      <div class="mt"><button class="primary" data-act="join">Join as facilitator</button></div>
+    </div></div>`;
+  const btn = g => `<button data-g="${g}" data-act="choose" data-v="${g}" aria-pressed="${c === g}"><strong>Group ${GROUPS[g].num}: ${GROUPS[g].name}</strong><span>${esc(GROUPS[g].who)}</span></button>`;
+  return `<div class="wrap" ${fixed ? `data-g="${fixed}"` : ''}>
+    <div class="landing-hero" style="padding-top:24px"><h1>Welcome to One Season of CPX</h1>
+      ${fixed ? `<p style="font-size:1.1rem">You\u2019re joining <b>Group ${GROUPS[fixed].num}: the ${GROUPS[fixed].name}</b>.</p>` : '<p class="muted">Session ' + esc(S.room) + '</p>'}</div>
+    ${demoBanner()}
+    <div class="card">
+      <p>For the next 40 minutes, you\u2019ll take part in one circle of the Community Power Exchange, a peer-led network of community organizations. You\u2019ll be given a role, with a little background and one thing only you know. There are no right answers: make the choices you think your role would make, and notice how it feels.</p>
+      ${fixed ? `<p>${esc(GROUPS[fixed].intro)}</p>` : ''}
+      <p class="muted">We\u2019ll begin with a short opening round.</p>
+      <label for="j-name">Your first name</label>
+      <input id="j-name" maxlength="40" autocomplete="given-name" style="max-width:320px">
+      ${fixed ? '' : `<h3 class="mt">Choose your breakout group</h3><div class="choose">${btn('cac')}${btn('mac')}${btn('cc')}</div>`}
+      ${S.ui.joinErr ? '<p style="color:#8A2B12;font-weight:700">' + esc(S.ui.joinErr) + '</p>' : ''}
+      <div class="mt"><button class="primary" data-g="${c || ''}" data-act="join">Join ${c ? 'the ' + GROUPS[c].name : 'the circle'}</button></div>
+      ${fixed ? '<p class="small muted mt">In a different breakout room? Use the link posted in that room\u2019s chat.</p>' : ''}
+    </div>
+  </div>`;
+}
+
+function topbar(me) {
+  const ph = PHASES.find(x => x.k === S.G.phase);
+  return `<header class="topbar" data-g="${me.group}"><div class="wrap">
+    <div class="who">${GROUPS[me.group].name}<span>${esc(me.name)}, ${esc(roleOf(me).name)}</span></div>
+    <div class="ph"><b>${esc(ph.label)}</b><span data-timer></span></div>
+  </div></header>`;
+}
+
+function roleCard(me) {
+  const r = roleOf(me), open = S.ui.roleOpen, mc = r.circle ? MAC_CIRCLES[r.circle] : null;
+  return `<section class="role" data-g="${me.group}">
+    <header><div><h2 style="margin:0">${esc(r.name)}</h2><div class="kind">${esc(r.kind)}</div></div>
+      <button class="quiet" data-act="toggleRole" aria-expanded="${open}">${open ? 'Hide' : 'Show'} role</button></header>
+    ${open ? `<div class="body">
+      ${r.pub ? '<p>' + esc(r.pub) + '</p>' : ''}
+      ${mc ? '<p><b>Your circle:</b> ' + esc(mc.context) + '</p>' : ''}
+      <div class="secret"><b>Only you know this.</b> ${esc(r.hidden)} <span class="muted small">Share it, or don\u2019t. That choice is part of the simulation.</span></div>
+    </div>` : ''}
+  </section>`;
+}
+
+function wordsOf(G, map, g) {
+  return (g ? G.order[g] : G.order.cac.concat(G.order.mac, G.order.cc)).filter(pid => map[pid])
+    .sort((x, y) => map[x].text.localeCompare(map[y].text))
+    .map(pid => `<span class="word" data-g="${G.players[pid].group}">${esc(map[pid].text)}</span>`).join('');
+}
+function roundCard(G, me, kind) {
+  const open = kind === 'open', map = open ? G.open : G.close, mine = map[me.pid];
+  const words = wordsOf(G, map, open ? me.group : null);
+  return `<section class="card round${fr('round-' + kind)}">
+    <h3>${open ? 'Opening round' : 'Closing round'}</h3>
+    <p class="muted">${open ? 'In a word or two, how are you feeling right now?' : 'In a word or two, how are you feeling now that the season is over?'}</p>
+    <div class="row"><input id="${kind}-word" maxlength="60" style="flex:1;min-width:160px" placeholder="${mine ? esc(mine.text) : ''}"><button class="primary" data-act="word" data-k="${kind}">${mine ? 'Change' : 'Share'}</button></div>
+    ${words ? `<div class="words">${words}</div>` : `<p class="empty">No words yet${open ? ' from your circle' : ''}.</p>`}
+  </section>`;
+}
+function arrivalsCard(G, g) {
+  if (G.phase !== 'flow' && G.phase !== 'sustain') return '';
+  const list = arrivals(G, g);
+  return `<section class="card"><h3>Arrived from other circles</h3>
+    ${list.length ? list.map(a => `<div class="item o-${a.o}${fr(a.id)}"><div class="title">${esc(a.title)}</div><div>${a.body}</div><div class="meta">${esc(a.meta)}</div></div>`).join('')
+      : '<p class="empty">Nothing yet. Work from the other circles will appear here as soon as it\u2019s sent.</p>'}</section>`;
+}
+
+function playerView(me) {
+  const G = S.G;
+  let body;
+  if (G.phase === 'lobby') body = `<div class="card"><h2>Welcome to the ${esc(GROUPS[me.group].name)}</h2><p>${esc(GROUPS[me.group].does)}</p><p class="muted">The season starts when your facilitator begins. Read your role while you wait.</p></div>` + roundCard(G, me, 'open');
+  else if (G.phase === 'reveal') body = roundCard(G, me, 'close') + revealView(me.group);
+  else {
+    const panel = ({ cac: cacPanel, mac: macPanel, cc: ccPanel })[me.group](G, me), arr = me.group === 'cc' ? '' : arrivalsCard(G, me.group);
+    body = G.phase === 'sustain' ? panel + arr : arr + panel;
+  }
+  return topbar(me) + `<main class="wrap" data-g="${me.group}">${demoBanner()}${G.phase !== 'reveal' ? roleCard(me) : ''}${body}</main>`;
+}
+
+/* ---- the season ring: three circles and what moved between them ---- */
+function ring(G) {
+  const nLess = G.cac.lessons.length, nReq = G.mac.reqs.length, nRep = G.cc.replies.length, nRule = G.cc.adoptions.length;
+  const nBack = G.mac.adapts.filter(a => G.cac.lessons.some(l => l.id === a.lessonId)).length;
+  const w = n => Math.min(9, 1.5 + n * 1.2);
+  const C = { cc: [210, 46], cac: [70, 196], mac: [350, 196] };
+  const node = (g, a, b) => `<circle cx="${C[g][0]}" cy="${C[g][1]}" r="34" fill="var(--${g}-bg)" stroke="var(--${g})" stroke-width="3"/>
+    <text x="${C[g][0]}" y="${C[g][1] - 2}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--${g}-ink)">${a}</text>
+    <text x="${C[g][0]}" y="${C[g][1] + 14}" text-anchor="middle" font-size="10.5" fill="var(--ink2)">${b}</text>`;
+  const arrow = (x1, y1, x2, y2, n, label, color, lx, ly, anchor) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${n ? color : 'var(--line)'}" stroke-width="${w(n)}" stroke-linecap="round" marker-end="url(#ah)"/>
+    <text x="${lx}" y="${ly}" text-anchor="${anchor || 'middle'}" font-size="11" fill="var(--ink2)">${label} ${n}</text>`;
+  return `<svg class="ring" viewBox="0 0 420 250" role="img" aria-label="What moved between circles: ${nLess} lessons, ${nBack} adaptations sent back, ${nReq} requests, ${nRep} replies, ${nRule} rules adopted">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--ink2)"/></marker></defs>
+    ${arrow(108, 188, 310, 188, nLess, 'Lessons', 'var(--cac)', 210, 180)}
+    ${arrow(316, 210, 106, 210, nBack, 'Adaptations', 'var(--mac)', 210, 230)}
+    ${arrow(328, 164, 242, 80, nReq, 'Requests', 'var(--mac)', 300, 108, 'start')}
+    ${arrow(224, 90, 306, 172, nRep, 'Replies', 'var(--cc)', 252, 150, 'end')}
+    ${arrow(176, 64, 82, 158, nRule, 'Rules', 'var(--cc)', 98, 96, 'end')}
+    ${node('cc', 'Coordination', 'Circle')}${node('cac', 'Eastside', 'local circle')}${node('mac', 'Alignment', 'circle')}
+  </svg>`;
+}
+
+/* ------------------------------ Collective Action Circle ------------------------------ */
+function propItem(G, p, me) {
+  const mine = myVotes(G, me.pid)[p.id] || 0, used = tokensUsed(G, me.pid);
+  return `<div class="item o-cac${fr(p.id)}">
+    <div class="title">${esc(p.title)}</div>
+    <div class="meta">${esc(pname(G, p.pid))} \u2014 ${money(p.amount)}, ${esc(p.priority)}</div>
+    <div class="mt"><span class="tag">${p.votes} vote${p.votes === 1 ? '' : 's'}</span>${p.funded ? '<span class="tag ok">Funded</span>' : ''}</div>
+    ${G.phase === 'build' ? `<div class="row mt">
+      <button data-act="vote" data-id="${p.id}" data-d="1" ${used >= TOKENS ? 'disabled' : ''}>Add a vote</button>
+      <button class="quiet" data-act="vote" data-id="${p.id}" data-d="-1" ${mine ? '' : 'disabled'}>Take back a vote</button>
+      ${mine ? '<span class="small muted">You gave ' + mine + '</span>' : ''}</div>` : ''}
+  </div>`;
+}
+function potBar(f) {
+  const segs = f.ballot.filter(p => p.funded).map(p => `<i style="width:${(p.amount / POT * 100).toFixed(1)}%" title="${esc(p.title)}"></i>`).join('');
+  return `<div class="pot" aria-hidden="true">${segs}</div><p class="small muted" style="margin-top:6px">${money(POT - f.left)} of ${money(POT)} would be funded at the current vote count. ${money(f.left)} left.</p>`;
+}
+function ruleList(opts) {
+  return '<ul style="margin:6px 0 0;padding-left:20px">' + Object.keys(RULE).map(k => `<li><b>${RULE[k].label}:</b> ${esc(RULE[k].opts[opts[k]])}</li>`).join('') + '</ul>';
+}
+
+function cacPanel(G, me) {
+  const f = funding(G), bb = roleOf(me).power === 'backbone';
+  if (G.phase === 'build') {
+    return `<section class="card">
+      <h2>Decide how to spend ${money(POT)}</h2>
+      <p>Propose ideas, then vote. Everyone has ${TOKENS} votes, and every proposal goes straight onto the ballot.${bb ? ' As backbone, you facilitate: invite people who haven\u2019t spoken, and keep the circle on time.' : ''}</p>
+      ${potBar(f)}
+      <p class="small"><b>Your votes left:</b> ${TOKENS - tokensUsed(G, me.pid)}</p>
+    </section>
+    <section class="card">
+      <h3>Propose an idea</h3>
+      <label for="p-title">What would you do with the money?</label>
+      <input id="p-title" maxlength="120" placeholder="e.g. Door-knocking crew for tenant rights">
+      <div class="grid2">
+        <div><label for="p-amt">Amount</label><select id="p-amt">${AMOUNTS.map(a => `<option value="${a}"${a === 5000 ? ' selected' : ''}>${money(a)}</option>`).join('')}</select></div>
+        <div><label for="p-pri">Priority</label><select id="p-pri">${PRIORITIES.map(p => `<option>${p}</option>`).join('')}</select></div>
+      </div>
+      <div class="mt"><button class="primary" data-act="cacProp">Submit proposal</button></div>
+    </section>
+    <section class="card"><h3>The ballot</h3>${f.ballot.length ? f.ballot.map(p => propItem(G, p, me)).join('') : '<p class="empty">No proposals yet.</p>'}</section>`;
+  }
+  if (G.phase === 'flow') {
+    const funded = f.ballot.filter(p => p.funded);
+    return `<section class="card"><h2>What your circle funded</h2>
+      ${funded.length ? funded.map(p => `<div class="item o-cac"><div class="title">${esc(p.title)}</div><div class="meta">${esc(pname(G, p.pid))} \u2014 ${money(p.amount)}, ${p.votes} votes</div></div>`).join('') : '<p class="empty">Nothing was funded this season.</p>'}
+    </section>
+    <section class="card"><h3>Send a lesson about how you decided</h3>
+      <p class="muted">Think about how your circle made its decisions this season, not what it funded. What would another circle want to learn from it?</p>
+      <label for="l-did">What you did</label>
+      <textarea id="l-did" maxlength="400" style="min-height:64px" placeholder="e.g. We let the people most affected speak before anyone voted"></textarea>
+      <label for="l-dep">What it depended on</label>
+      <input id="l-dep" maxlength="300" placeholder="e.g. A facilitator who held back the larger organizations">
+      <label for="l-fail">What nearly went wrong</label>
+      <input id="l-fail" maxlength="300" placeholder="e.g. We almost voted before the tenants spoke">
+      <div class="mt"><button class="primary" data-act="cacLesson">Send to the alignment circle</button></div>
+      ${G.cac.lessons.length ? '<h3 class="mt">Sent so far</h3>' + G.cac.lessons.map(l => `<div class="item o-cac${fr(l.id)}">${lessonParts(l)}<div class="meta">${esc(pname(G, l.pid))}</div></div>`).join('') : ''}
+    </section>`;
+  }
+  if (G.phase === 'sustain') {
+    const t = tally(G.cac.next), mine = G.cac.next[me.pid];
+    const cur = G.order.cac.find(pid => roleOf(G.players[pid]).power === 'backbone');
+    const orgs = G.order.cac.map(pid => `<div class="item o-cac${fr(pid)}"><div class="row between"><div><div class="title">${esc(pname(G, pid))}</div><div class="meta">${esc(roleOf(G.players[pid]).kind)}${pid === cur ? ', backbone this season' : ''}</div></div>
+        <div class="row"><span class="tag">${t[pid] || 0} chose</span><button data-act="cacNext" data-id="${pid}" aria-pressed="${mine === pid}" ${mine === pid ? 'class="primary"' : ''}>${mine === pid ? 'Your choice' : 'Choose'}</button></div></div></div>`).join('');
+    return `<section class="card"><h2>Choose who convenes next season</h2>
+      <p>In CPX the backbone role rotates, so the skills to convene and coordinate spread across every organization. Which organization should take it on next?</p>${orgs}</section>
+    <section class="card"><h3>What would help the next backbone, and the rest of the circle, avoid burning out?</h3>
+      <p class="muted">Think about time, money, who carries what, and how people recover after a hard season.</p>
+      <label for="k-text">Your answer</label><textarea id="k-text" maxlength="600"></textarea>
+      <div class="mt"><button class="primary" data-act="cacCarry">Share</button></div>
+      ${G.cac.carry.map(c => `<div class="item o-cac${fr(c.id)}"><div>${esc(c.text)}</div><div class="meta">${esc(pname(G, c.pid))}</div></div>`).join('')}</section>`;
+  }
+  return '';
+}
+
+/* ------------------------------ Movement Alignment Circle ------------------------------ */
+function lessonCard(G, l) {
+  const ad = G.mac.adapts.filter(a => a.lessonId === l.id);
+  return `<div class="item o-${l.origin === 'own' ? 'mac' : l.origin}${fr(l.id)}"><div class="title">${esc(l.title)}</div><div class="meta">${esc(l.from)}</div>${lessonParts(l)}
+    ${ad.map(a => `<div class="item o-mac${fr(a.id)}" style="background:#fff"><div class="meta">${esc(pname(G, a.pid))}, ${esc(macCircleOf(G, a.pid))} circle</div><div>${adaptTags(a)}</div>${a.text ? '<div class="mt">' + esc(a.text) + '</div>' : ''}</div>`).join('')}</div>`;
+}
+function macPanel(G, me) {
+  const r = roleOf(me), lessons = allLessons(G, G.phase !== 'build');
+  const canAdapt = lessons.filter(l => !(l.origin === 'seed' && l.circle === r.circle) && !(l.origin === 'cac' && r.circle === 'eastside') && l.pid !== me.pid);
+  const pick = (name, opts, cur) => `<div class="stance" role="group">${Object.entries(opts).map(([k, label]) => `<button data-act="macPick" data-f="${name}" data-v="${k}" aria-pressed="${cur === k}">${label}</button>`).join('')}</div>`;
+  const adaptForm = `<section class="card"><h3>Would this work in your circle?</h3>
+      <p class="muted">${esc(MAC_CIRCLES[r.circle].name)}: ${esc(MAC_CIRCLES[r.circle].context)}</p>
+      <label for="a-which">Choose a lesson from another circle</label>
+      <select id="a-which">${canAdapt.map(l => `<option value="${l.id}">${esc(l.title)} (${esc(l.from)})</option>`).join('')}</select>
+      <label>In your circle, would you\u2026</label>${pick('verdict', VERDICT, S.ui.verdict)}
+      <label for="a-text">${S.ui.verdict === 'drop' ? 'Why would you drop it?' : 'What would you change, and why?'}${S.ui.verdict === 'keep' ? ' (optional)' : ''}</label>
+      <textarea id="a-text" maxlength="600" style="min-height:64px"></textarea>
+      <div class="mt"><button class="primary" data-act="macAdapt">Share your response</button></div></section>`;
+  const ownForm = `<section class="card"><h3>Share a lesson from your own work</h3>
+      <p class="muted">A real practice about how a group you know decides, leads, or builds trust. It joins the lessons others can respond to.</p>
+      <label for="o-title">Name it in a few words</label><input id="o-title" maxlength="100" placeholder="e.g. Close every meeting by reading back decisions">
+      <label for="o-did">What you did</label><textarea id="o-did" maxlength="400" style="min-height:64px"></textarea>
+      <label for="o-dep">What it depended on</label><input id="o-dep" maxlength="300">
+      <label for="o-fail">What nearly failed</label><input id="o-fail" maxlength="300">
+      <div class="mt"><button class="primary" data-act="macOwn">Share lesson</button></div></section>`;
+  if (G.phase === 'build') {
+    return `<section class="card"><h2>Exchange governance lessons</h2><p>Three local circles work on health equity in very different places. Here you exchange how they govern themselves. You don\u2019t need to agree on one way of working. Find out what a practice from one place would mean in yours.</p></section>
+      ${adaptForm}<section class="card"><h3>Lessons on the table</h3>${lessons.map(l => lessonCard(G, l)).join('')}</section>${ownForm}`;
+  }
+  if (G.phase === 'flow') {
+    return adaptForm + `<section class="card"><h3>Ask the Coordination Circle for something</h3>
+        <p class="muted">What would help governance lessons move between your three circles? Money, translation, time, a rule change?</p>
+        <label for="q-text">Your request</label><textarea id="q-text" maxlength="600"></textarea>
+        <div class="mt"><button class="primary" data-act="macReq">Send to the Coordination Circle</button></div>
+        ${G.mac.reqs.map(q => `<div class="item o-mac${fr(q.id)}"><div>${esc(q.text)}</div><div class="meta">${esc(pname(G, q.pid))}</div></div>`).join('')}</section>
+      <section class="card"><h3>All lessons so far</h3>${lessons.map(l => lessonCard(G, l)).join('')}</section>${ownForm}`;
+  }
+  if (G.phase === 'sustain') {
+    const t = tally(G.mac.keep), mine = G.mac.keep[me.pid];
+    return `<section class="card"><h2>Choose one lesson to keep working on</h2>
+      <p>Next season, the alignment circle will carry one lesson forward between your three circles. Which one is worth the effort?</p>
+      ${lessons.map(l => `<div class="item o-${l.origin === 'own' ? 'mac' : l.origin}"><div class="title">${esc(l.title)}</div><div class="meta">${esc(l.from)}</div><div>${esc(l.did)}</div>
+        <div class="row mt"><span class="tag">${t[l.id] || 0} chose</span><button data-act="macKeep" data-id="${l.id}" aria-pressed="${mine === l.id}" ${mine === l.id ? 'class="primary"' : ''}>${mine === l.id ? 'Your choice' : 'Keep this one'}</button></div></div>`).join('')}</section>
+    <section class="card"><h3>What would keep it moving between your circles?</h3>
+      <label for="m-text">Your answer</label><textarea id="m-text" maxlength="600"></textarea>
+      <div class="mt"><button class="primary" data-act="macPlan">Share</button></div>
+      ${G.mac.plans.map(c => `<div class="item o-mac${fr(c.id)}"><div>${esc(c.text)}</div><div class="meta">${esc(pname(G, c.pid))}, ${esc(macCircleOf(G, c.pid))} circle</div></div>`).join('')}</section>`;
+  }
+  return '';
+}
+
+/* ------------------------------ Coordination Circle ------------------------------ */
+function ccPanel(G, me) {
+  const r = roleOf(me), adopted = adoptedRule(G), pend = pendingRule(G);
+  const draft = (title, intro, btn) => `<section class="card"><h2>${title}</h2><p>${intro}</p>
+      <div class="grid2">${Object.keys(RULE).map(k => `<div><label for="rule-${k}">${RULE[k].label}</label><select id="rule-${k}">${RULE[k].opts.map((o, i) => `<option value="${i}">${esc(o)}</option>`).join('')}</select></div>`).join('')}</div>
+      <div class="mt"><button class="primary" data-act="ccRule">${btn}</button></div></section>`;
+  const pending = () => {
+    if (!pend) return '';
+    const st = consentStatus(G, pend.id), mine = (G.cc.resp[pend.id] || {})[me.pid];
+    return `<section class="card"><h3>On the table now</h3>
+      <div class="item o-cc${fr(pend.id)}"><div class="meta">${pend.revision ? 'Revision' : 'Draft'} proposed by ${esc(pname(G, pend.pid))}</div>${ruleList(pend.opts)}</div>
+      <label for="c-reason">Your reason (needed for a concern or objection)</label>
+      <input id="c-reason" maxlength="300" placeholder="What would this rule do to the people you represent?">
+      <div class="stance">
+        <button data-act="ccResp" data-s="consent" aria-pressed="${!!mine && mine.stance === 'consent'}">Consent</button>
+        <button data-act="ccResp" data-s="concern" aria-pressed="${!!mine && mine.stance === 'concern'}">Consent with a concern</button>
+        <button data-act="ccResp" data-s="object" aria-pressed="${!!mine && mine.stance === 'object'}">Object</button>
+      </div>
+      <p class="small muted mt">${st.consent} consent, ${st.concern} with concerns, ${st.object} objecting. ${st.responded} of ${st.voters} members have responded; consent needs ${st.need} and no objections.</p>
+      ${Object.entries(G.cc.resp[pend.id] || {}).filter(([, x]) => x.reason).map(([pid, x]) => `<div class="item o-cc"><span class="tag">${x.stance === 'object' ? 'Objection' : x.stance === 'concern' ? 'Concern' : 'Consent'}</span> ${esc(x.reason)}<div class="meta">${esc(pname(G, pid))}</div></div>`).join('')}
+      <div class="row mt">
+        <button class="primary" data-act="ccAdopt" data-m="consent" ${st.ok ? '' : 'disabled'}>Adopt by consent</button>
+        ${r.power === 'agent' ? '<button class="warn" data-act="ccAdopt" data-m="agent">Adopt now as fiscal agent</button>' : ''}
+      </div></section>`;
+  };
+  const adoptedCard = () => adopted ? `<section class="card"><h2>Your rule for Rapid Response Grants</h2>
+      <p>Adopted ${G.cc.adopted.mode === 'agent' ? 'by Root Change staff as fiscal agent' + (G.cc.adopted.snapshot.object ? ', with ' + G.cc.adopted.snapshot.object + ' objection' + (G.cc.adopted.snapshot.object === 1 ? '' : 's') + ' still open' : '') : 'by consent'}.</p>${ruleList(adopted.opts)}</section>` : '';
+  const reqs = `<section class="card"><h3>Requests from the alignment circle</h3>${G.mac.reqs.length ? G.mac.reqs.map(q => {
+      const reps = G.cc.replies.filter(x => x.reqId === q.id);
+      return `<div class="item o-mac${fr(q.id)}"><div>${esc(q.text)}</div><div class="meta">${esc(pname(G, q.pid))}, ${esc(macCircleOf(G, q.pid))} circle</div>
+        ${reps.map(x => `<div class="item o-cc${fr(x.id)}" style="background:#fff"><div>${esc(x.text)}</div><div class="meta">${esc(pname(G, x.pid))}</div></div>`).join('')}
+        <label for="rep-${q.id}">Reply</label><textarea id="rep-${q.id}" maxlength="600" style="min-height:60px"></textarea><div class="mt"><button data-act="ccReply" data-id="${q.id}">Send reply</button></div></div>`;
+    }).join('') : '<p class="empty">None yet. Requests arrive during the Win phase.</p>'}</section>`;
+  const intro = 'Draft a rule, then test it for consent. Consent does not mean everyone loves it. It means no one has an objection they can\u2019t live with.';
+  if (G.phase === 'build') return adopted ? adoptedCard() : (pend ? '' : draft('Set the rule for Rapid Response Grants', intro, 'Propose this rule')) + pending() + (pend ? draft('Propose an amendment', 'If the draft on the table can\u2019t reach consent, propose a changed version. Responses start over.', 'Propose amended rule') : '');
+  if (G.phase === 'flow') return reqs + (adopted ? adoptedCard() : pending() + draft(pend ? 'Propose an amendment' : 'Set the rule for Rapid Response Grants', pend ? 'Responses start over with any amendment.' : intro, pend ? 'Propose amended rule' : 'Propose this rule'));
+  if (G.phase === 'sustain') {
+    if (!adopted) return `<section class="card"><p><b>You haven\u2019t adopted a rule yet.</b> Use this time to finish it.</p></section>` + pending() + draft('Propose a rule', intro, 'Propose this rule') + reqs;
+    const rv = G.cc.review, mine = rv[me.pid], keep = Object.values(rv).filter(x => x.stance === 'keep').length, change = Object.values(rv).length - keep;
+    return adoptedCard() + `<section class="card"><h3>Would you keep this rule for next season?</h3>
+      <p class="muted">Does it care for the people doing the work? Think about organizer wellness and safety, the smallest organizations, and the ones outside the United States.</p>
+      <label for="v-reason">Why?</label><input id="v-reason" maxlength="300">
+      <div class="stance">
+        <button data-act="ccReview" data-s="keep" aria-pressed="${!!mine && mine.stance === 'keep'}">Keep it</button>
+        <button data-act="ccReview" data-s="change" aria-pressed="${!!mine && mine.stance === 'change'}">Change it</button>
+      </div>
+      <p class="small muted mt">${keep} would keep it, ${change} would change it.</p>
+      ${Object.entries(rv).filter(([, x]) => x.reason).map(([pid, x]) => `<div class="item o-cc${fr('rv' + pid)}"><span class="tag">${x.stance === 'keep' ? 'Keep' : 'Change'}</span> ${esc(x.reason)}<div class="meta">${esc(pname(G, pid))}</div></div>`).join('')}
+    </section>${pending()}${pend ? '' : draft('Propose a revision', 'If you want to change the rule, propose a revised version. It needs consent like the first one.', 'Propose revision')}${reqs}`;
+  }
+  return '';
+}
+
+/* ------------------------------ look back ------------------------------ */
+function revealView(focus) {
+  const G = S.G, f = funding(G);
+  const order = focus ? [focus].concat(['cac', 'mac', 'cc'].filter(g => g !== focus)) : ['cac', 'mac', 'cc'];
+  const debrief = g => `<section class="card debrief" data-g="${g}"><h2>${esc(DEBRIEF[g].title)}</h2><ul>${DEBRIEF[g].qs.map(q => '<li>' + esc(q) + '</li>').join('')}</ul>
+      ${g === focus ? '<p class="small"><b>Then switch lenses:</b> what does your own collaboration look like at this level? What is working, what isn\u2019t, and what might need to change?</p>' : ''}</section>`;
+
+  // Local circle: power and the next backbone
+  const rows = G.order.cac.map(pid => {
+    const p = G.players[pid], mine = f.ballot.filter(x => x.pid === pid);
+    return { pid, p, r: roleOf(p), props: mine.length, cast: Object.values(G.cac.votes[pid] || {}).reduce((a, n) => a + n, 0),
+      votes: mine.reduce((a, x) => a + x.votes, 0), funded: mine.filter(x => x.funded).reduce((a, x) => a + x.amount, 0), next: tally(G.cac.next)[pid] || 0 };
+  });
+  const bb = rows.find(x => x.r.power === 'backbone'), total = POT - f.left;
+  const nextTop = rows.slice().sort((a, b) => b.next - a.next)[0];
+  const powerNote = [
+    total && bb ? `The backbone\u2019s own proposals received ${Math.round(bb.funded / total * 100)}% of the money that was funded.` : 'Nothing was funded.',
+    rows.filter(x => !x.props).length ? rows.filter(x => !x.props).map(x => x.r.name).join(', ') + ' never proposed anything.' : '',
+    rows.filter(x => !x.cast).length ? rows.filter(x => !x.cast).map(x => x.r.name).join(', ') + ' never voted.' : '',
+    nextTop && nextTop.next ? `For next season, the circle chose ${nextTop.r.name} as backbone.` : ''
+  ].filter(Boolean).join(' ');
+  const table = rows.length ? `<div class="scroll"><table><thead><tr><th>Organization</th><th class="n">Proposed</th><th class="n">Votes cast</th><th class="n">Votes received</th><th class="n">Funded</th><th class="n">Chosen as next backbone</th></tr></thead><tbody>
+    ${rows.map(x => `<tr class="${x.r.power === 'backbone' ? 'hl' : ''}"><td><b>${esc(x.r.name)}</b><div class="small muted">${esc(x.p.name)}${x.r.power === 'backbone' ? ', backbone this season' : ''}</div></td><td class="n">${x.props}</td><td class="n">${x.cast}</td><td class="n">${x.votes}</td><td class="n">${money(x.funded)}</td><td class="n">${x.next}</td></tr>`).join('')}
+    </tbody></table></div>` : '<p class="empty">No one joined the local circle.</p>';
+
+  // Alignment circle
+  const lessons = allLessons(G, true), kt = tally(G.mac.keep);
+  const traveled = lessons.filter(l => G.mac.adapts.some(a => a.lessonId === l.id));
+  const kept = lessons.slice().sort((a, b) => (kt[b.id] || 0) - (kt[a.id] || 0))[0];
+  const vt = l => { const a = G.mac.adapts.filter(x => x.lessonId === l.id); return ['keep', 'change', 'drop'].map(k => a.filter(x => x.verdict === k).length + ' ' + k).join(', '); };
+  const travel = (G.mac.own.length ? `<p>${G.mac.own.length} lesson${G.mac.own.length === 1 ? '' : 's'} shared from delegates\u2019 own work.</p>` : '')
+    + (traveled.length ? traveled.map(l => `<p class="small mt"><b>${esc(l.title)}:</b> ${vt(l)}</p>` + lessonCard(G, l)).join('') : '<p class="empty">No one responded to a lesson.</p>')
+    + (lessons.length > traveled.length ? `<p class="small muted mt">No one responded to: ${lessons.filter(l => !traveled.includes(l)).map(l => esc(l.title)).join(', ')}.</p>` : '')
+    + (kept && kt[kept.id] ? `<h3 class="mt">The lesson the circle chose to keep</h3><div class="item o-${kept.origin}"><div class="title">${esc(kept.title)}</div><div class="meta">${esc(kept.from)}, chosen by ${kt[kept.id]} of ${G.order.mac.length}</div>${lessonParts(kept)}</div>` : '')
+    + (G.mac.plans.length ? '<h3 class="mt">What would keep it moving</h3>' + G.mac.plans.map(c => `<div class="item o-mac"><div>${esc(c.text)}</div><div class="meta">${esc(pname(G, c.pid))}, ${esc(macCircleOf(G, c.pid))} circle</div></div>`).join('') : '');
+
+  // Coordination Circle
+  const objections = Object.values(G.cc.resp).reduce((a, r) => a + Object.values(r).filter(x => x.stance === 'object').length, 0);
+  const agent = G.cc.adoptions.filter(a => a.mode === 'agent').length;
+  const rv = Object.values(G.cc.review), rvKeep = rv.filter(x => x.stance === 'keep').length;
+  const gov = `<p>${G.cc.rules.length} version${G.cc.rules.length === 1 ? '' : 's'} of the rule proposed, ${objections} objection${objections === 1 ? '' : 's'} raised.
+      ${G.cc.adoptions.length ? `${G.cc.adoptions.length} adopted, ${agent ? agent + ' of them by Root Change staff as fiscal agent' : 'all by consent'}.` : 'No rule was adopted.'}
+      ${rv.length ? ` In Sustain, ${rvKeep} would keep the rule and ${rv.length - rvKeep} would change it.` : ''}
+      ${G.mac.reqs.length ? ` The alignment circle sent ${G.mac.reqs.length} request${G.mac.reqs.length === 1 ? '' : 's'}; ${G.mac.reqs.filter(q => G.cc.replies.some(x => x.reqId === q.id)).length} got a reply.` : ''}</p>
+    ${adoptedRule(G) ? '<h3 class="mt">The rule as it stands</h3>' + ruleList(adoptedRule(G).opts) : ''}`;
+
+  const ar = adoptedRule(G), healLessons = ['seedD1', 'seedH1'];
+  const healKept = Object.values(G.mac.keep).filter(id => healLessons.includes(id)).length;
+  const healResp = G.mac.adapts.filter(a => healLessons.includes(a.lessonId)).length;
+  const care = `<section class="card"><h2>Care this season</h2>
+      <p class="muted">How each circle opened, and what the season decided about care.</p>
+      ${['cac', 'mac', 'cc'].map(g => { const w = wordsOf(G, G.open, g); return w ? `<h3 class="mt" style="color:var(--${g}-ink)">${GROUPS[g].name}</h3><div class="words">${w}</div>` : ''; }).join('') || '<p class="empty">No opening words were shared.</p>'}
+      <ul class="mt">
+        <li>${ar ? (ar.opts.covers === 1 ? 'The Rapid Response rule covers organizer wellness and safety.' : 'The Rapid Response rule covers urgent campaign costs only, not organizer wellness or safety.') : 'No Rapid Response rule was adopted.'}</li>
+        <li>${healResp} response${healResp === 1 ? '' : 's'} to the two healing and rest lessons in the alignment circle; ${healKept} delegate${healKept === 1 ? '' : 's'} chose one to carry forward.</li>
+        <li>${G.cac.carry.length} member${G.cac.carry.length === 1 ? '' : 's'} of the Eastside circle said what would help avoid burnout.</li>
+      </ul></section>`;
+  const closing = wordsOf(G, G.close, null);
+  const secrets = ['cac', 'mac', 'cc'].map(g => G.order[g].map(pid => { const p = G.players[pid], r = roleOf(p); return `<div class="item o-${g}"><div class="title">${esc(r.name)} <span class="small muted">(${esc(p.name)})</span></div><div>${esc(r.hidden)}</div></div>`; }).join('')).join('');
+
+  return `<section class="card"><h1 style="font-size:1.9rem">Looking back on the season</h1><p class="muted">What happened in each circle, and what moved between them.</p>${ring(G)}</section>
+    ${!focus ? `<section class="card round"><h2>Closing words</h2>${closing ? `<div class="words big">${closing}</div>` : '<p class="empty">Closing words will appear here as people add them.</p>'}</section>` : ''}
+    ${focus ? debrief(focus) : ''}
+    <section class="card"><h2>For everyone</h2><p style="font-size:1.08rem">${esc(SHARED_Q)}</p></section>
+    ${care}
+    <section class="card"><h2>What people knew but never had to say</h2><p class="muted">Each role carried something only that person knew. Which of these came up in your circle?</p><div class="secret-list">${secrets || '<p class="empty">No one joined.</p>'}</div></section>
+    <section class="card" data-g="cac"><h2>Who held power in the Eastside circle</h2><p>${esc(powerNote)}</p>${table}</section>
+    <section class="card" data-g="mac"><h2>How lessons traveled</h2>${travel}</section>
+    <section class="card" data-g="cc"><h2>Where decisions were made</h2>${gov}</section>
+    <section class="card"><h2>The network this season built</h2><p class="muted">Each dot is a person. A line means they acted on each other\u2019s work: voted for, adapted, replied to, responded to, or chose it.</p>${netmap(G)}</section>
+    <section class="card"><h2>The chain</h2>${chain(G, f)}</section>
+    ${order.filter(g => g !== focus).map(debrief).join('')}`;
+}
+
+function chain(G, f) {
+  const funded = f.ballot.filter(p => p.funded), ar = adoptedRule(G), kt = tally(G.mac.keep), nt = tally(G.cac.next);
+  const top = (t) => Object.keys(t).sort((a, b) => t[b] - t[a])[0];
+  const keptL = top(kt) ? allLessons(G, true).find(l => l.id === top(kt)) : null, nextB = top(nt);
+  const backAdapts = G.mac.adapts.filter(x => G.cac.lessons.some(l => l.id === x.lessonId));
+  const steps = [
+    ['cac', 'Build: the Eastside circle funded', funded.length ? funded.map(p => esc(p.title) + ' (' + money(p.amount) + ')').join('; ') : 'nothing'],
+    ['cc', 'Build: the Coordination Circle', G.cc.adoptions.length ? 'drafted and then adopted a rule ' + (G.cc.adoptions[0].mode === 'agent' ? 'as fiscal agent' : 'by consent') : 'did not adopt a rule'],
+    ['cac', 'Win: Eastside sent a lesson about how it decided', G.cac.lessons.length ? esc(G.cac.lessons[0].did) : 'No lesson was sent'],
+    ['mac', 'Win: the alignment circle responded', backAdapts.length ? backAdapts.map(x => VERDICT[x.verdict] + (x.text ? ': ' + esc(x.text) : '') + ' (' + esc(macCircleOf(G, x.pid)) + ')').join(' / ') : 'No one responded to the Eastside lesson'],
+    ['mac', 'Win: and asked the Coordination Circle', G.mac.reqs.length ? G.mac.reqs.map(q => esc(q.text)).join(' / ') : 'No request was sent'],
+    ['cac', 'Sustain: Eastside chose its next backbone', nextB ? esc(pname(G, nextB)) : 'No choice was made'],
+    ['mac', 'Sustain: the alignment circle kept', keptL ? esc(keptL.title) + ' (' + esc(keptL.from) + ')' : 'No lesson was chosen'],
+    ['cc', 'Sustain: the Coordination Circle', ar ? (G.cc.adoptions.length > 1 ? 'revised its rule ' + (G.cc.adopted.mode === 'agent' ? 'as fiscal agent' : 'by consent') : 'kept its rule') : 'still had no rule']
+  ];
+  return '<div class="chain">' + steps.map(([g, a, b]) => `<div class="step" data-g="${g}"><b>${a}</b><div>${b}</div></div>`).join('') + '</div>';
+}
+
+function netmap(G) {
+  const W = 900, H = 470, C = { cc: [450, 110], cac: [200, 340], mac: [700, 340] }, pos = {};
+  ['cac', 'mac', 'cc'].forEach(g => {
+    const ids = G.order[g], n = ids.length, R = n <= 1 ? 0 : Math.min(110, 34 + n * 9);
+    ids.forEach((pid, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / Math.max(1, n); pos[pid] = [C[g][0] + R * Math.cos(a), C[g][1] + R * Math.sin(a)]; });
+  });
+  const E = {};
+  const add = (a, b, w) => { if (!a || !b || a === b || !pos[a] || !pos[b]) return; const k = a < b ? a + '|' + b : b + '|' + a; E[k] = (E[k] || 0) + (w || 1); };
+  Object.entries(G.cac.votes).forEach(([v, m]) => Object.entries(m).forEach(([id, c]) => { const p = G.cac.props.find(x => x.id === id); if (p && c) add(v, p.pid, c); }));
+  Object.entries(G.cac.next).forEach(([v, n]) => add(v, n));
+  G.mac.adapts.forEach(a => { const l = G.cac.lessons.find(x => x.id === a.lessonId) || G.mac.own.find(x => x.id === a.lessonId); if (l) add(a.pid, l.pid, 2); });
+  Object.entries(G.mac.keep).forEach(([v, id]) => { const l = G.cac.lessons.find(x => x.id === id) || G.mac.own.find(x => x.id === id); if (l) add(v, l.pid); });
+  G.cc.replies.forEach(r => { const q = G.mac.reqs.find(x => x.id === r.reqId); if (q) add(r.pid, q.pid, 2); });
+  G.cc.rules.forEach(ru => Object.keys(G.cc.resp[ru.id] || {}).forEach(pid => add(pid, ru.pid)));
+  const deg = {};
+  Object.entries(E).forEach(([k, w]) => k.split('|').forEach(id => { deg[id] = (deg[id] || 0) + w; }));
+  let cross = 0, within = 0;
+  const lines = Object.entries(E).map(([k, w]) => {
+    const [a, b] = k.split('|'), ga = G.players[a].group, x = ga !== G.players[b].group;
+    if (x) cross++; else within++;
+    return `<line x1="${pos[a][0].toFixed(1)}" y1="${pos[a][1].toFixed(1)}" x2="${pos[b][0].toFixed(1)}" y2="${pos[b][1].toFixed(1)}" stroke="${x ? 'var(--ink)' : 'var(--' + ga + ')'}" stroke-opacity="${x ? .7 : .45}" stroke-width="${Math.min(6, .8 + w * .7).toFixed(1)}"/>`;
+  }).join('');
+  const nodes = Object.keys(pos).map(pid => {
+    const p = G.players[pid], [x, y] = pos[pid], r = 7 + Math.min(12, (deg[pid] || 0) * .9);
+    return `<g><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="var(--${p.group})" stroke="#fff" stroke-width="2"><title>${esc(p.name)}, ${esc(roleOf(p).name)}</title></circle>
+      <text x="${x.toFixed(1)}" y="${(y + r + 13).toFixed(1)}" text-anchor="middle" font-size="12" fill="var(--ink)">${esc(p.name)}</text></g>`;
+  }).join('');
+  const lbl = (g, t) => `<text x="${C[g][0]}" y="${g === 'cc' ? 22 : H - 8}" text-anchor="middle" font-size="14" font-weight="700" fill="var(--${g}-ink)">${t}</text>`;
+  return `<svg class="netmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Network map: ${within} ties within circles, ${cross} across circles">
+    ${lines}${nodes}${lbl('cc', 'Coordination Circle')}${lbl('cac', 'Eastside local circle')}${lbl('mac', 'Alignment circle')}</svg>
+    <p class="small muted">${within} tie${within === 1 ? '' : 's'} within circles and ${cross} across them. Dark lines cross between circles.</p>`;
+}
+
+/* ------------------------------ breakout facilitators ------------------------------ */
+const ACTIVE_TYPES = { lobby: ['open_word'] };
+function quietIn(G, g) {
+  const types = ACTIVE_TYPES[G.phase], since = G.phaseAt || 0;
+  const acted = new Set(S.events.filter(e => e.ts >= since && e.type !== 'join' && e.type !== 'phase' && e.type !== 'guide_join' && (!types || types.includes(e.type))).map(e => e.pid));
+  return G.order[g].filter(pid => !acted.has(pid));
+}
+function guideLine(G, g) {
+  const gs = Object.values(G.guides).filter(x => x.group === g);
+  return gs.length ? `<p class="small" style="margin:0 0 4px"><b>Breakout facilitator:</b> ${gs.map(x => esc(x.name)).join(', ')}</p>` : '<p class="small muted" style="margin:0 0 4px">No breakout facilitator yet.</p>';
+}
+function signalBadge(G, g) {
+  const s = G.signals[g];
+  if (!s || s.phase !== G.phase || s.ts < (G.phaseAt || 0)) return '';
+  return `<p style="margin:4px 0"><span class="tag ${s.kind === 'more' ? 'wait' : 'ok'}">${s.kind === 'more' ? 'Asks for 2 more minutes' : 'Ready for the next phase'}</span></p>`;
+}
+function backboneCard(G) {
+  const bb = G.order.cac.map(id => G.players[id]).find(x => x.role === 0);
+  if (G.phase !== 'lobby') return bb ? `<section class="card"><h3>Backbone this season</h3><p><b>${esc(bb.name)}</b> is playing ${esc(ROLES.cac[0].name)}.</p></section>` : '';
+  return `<section class="card"><h3>Choose the backbone</h3>
+    <p class="small muted">The backbone convenes the circle: it facilitates, keeps time, and makes sure everyone is heard. Choose someone ready for that. They swap roles with whoever has it now. You can change this until Build starts.</p>
+    ${bb ? `<p><b>Backbone now:</b> ${esc(bb.name)}${G.assigned && G.assigned.pid === bb.pid ? ' (your choice)' : ' (first to join)'}</p>` : ''}
+    ${G.order.cac.length ? G.order.cac.map(id => G.players[id]).map(p => `<div class="item o-cac"><div class="row between"><div><b>${esc(p.name)}</b> <span class="small muted">${esc(roleOf(p).name)}</span></div>
+        ${p.role === 0 ? '<span class="tag ok">Backbone</span>' : `<button data-act="assignBackbone" data-id="${p.pid}">Make backbone</button>`}</div></div>`).join('') : '<p class="empty">No one has joined yet.</p>'}
+  </section>`;
+}
+function guideView(gd) {
+  const G = S.G, g = gd.group, ph = PHASES.find(x => x.k === G.phase), notes = (GUIDE_NOTES[G.phase] || {})[g];
+  const sig = G.signals[g], sigNow = sig && sig.phase === G.phase && sig.ts >= (G.phaseAt || 0) ? sig.kind : null;
+  const quiet = quietIn(G, g), items = G.log.filter(l => l.g === g && l.text.indexOf(' joined as ') < 0).slice(-6).reverse();
+  const top = `<header class="topbar" data-g="${g}"><div class="wrap"><div class="who">Breakout facilitator<span>${esc(gd.name)}, Group ${GROUPS[g].num}: ${GROUPS[g].name}</span></div>
+    <div class="ph"><b>${esc(ph.label)}</b><span data-timer></span></div></div></header>`;
+  if (G.phase === 'reveal') return top + `<main class="wrap" data-g="${g}">${revealView(g)}</main>`;
+  return top + `<main class="wrap" data-g="${g}">${demoBanner()}
+    <section class="card"><div class="row between"><div><h2 style="margin:0">${esc(ph.label)}</h2><div class="small muted">${esc(ph.sub)}${ph.min ? ', ' + ph.min + ' minutes' : ''}</div></div>
+      <div style="text-align:right"><div class="countdown" data-left></div><div class="small muted">left in this phase</div></div></div></section>
+    ${notes ? `<section class="card"><h3>What to say now</h3><ul class="notes">${notes.map(n => '<li>' + esc(n) + '</li>').join('')}</ul></section>` : ''}
+    ${g === 'cac' ? backboneCard(G) : ''}
+    ${G.phase !== 'lobby' ? `<section class="card"><h3>Tell the lead</h3><p class="small muted">The lead moves all three rooms to the next phase at once. Let them know how your room is doing.</p>
+      <div class="stance"><button data-act="signal" data-k="more" aria-pressed="${sigNow === 'more'}">We need 2 more minutes</button><button data-act="signal" data-k="ready" aria-pressed="${sigNow === 'ready'}">We\u2019re ready to move on</button></div>
+      ${sigNow ? `<p class="small mt">Sent: ${sigNow === 'more' ? 'you asked for 2 more minutes' : 'you said your room is ready'}.</p>` : ''}</section>` : ''}
+    <section class="card"><h3>${G.phase === 'lobby' ? 'Haven\u2019t shared an opening word yet' : 'Not active yet this phase'}</h3>
+      ${G.order[g].length ? (quiet.length ? quiet.map(pid => `<div class="item o-${g}"><b>${esc(G.players[pid].name)}</b> <span class="small muted">${esc(roleOf(G.players[pid]).name)}</span></div>`).join('') : '<p class="empty">Everyone has taken part.</p>') : '<p class="empty">No one has joined yet.</p>'}
+      <p class="small muted">${G.order[g].length} in the room. Someone who hasn\u2019t clicked may still be talking; this is a prompt, not a judgment.</p></section>
+    ${wordsOf(G, G.open, g) ? `<section class="card"><h3>Your room\u2019s opening words</h3><div class="words">${wordsOf(G, G.open, g)}</div></section>` : ''}
+    <section class="card"><h3>What\u2019s happening in your room</h3>${items.length ? items.map(l => `<div class="small" style="padding:4px 0;border-bottom:1px solid var(--line)">${esc(l.text)}</div>`).join('') : '<p class="empty">Nothing yet.</p>'}</section>
+    <section class="card"><h3>Participant link for your room</h3><p class="small muted" style="word-break:break-all">${esc(joinLink(g))}</p><button data-act="copy" data-v="${esc(joinLink(g))}">Copy link</button></section>
+  </main>`;
+}
+
+/* ------------------------------ facilitator ------------------------------ */
+function hostView() {
+  const G = S.G, idx = PHASES.findIndex(p => p.k === G.phase), ph = PHASES[idx], next = PHASES[idx + 1];
+  const circleCol = g => {
+    const items = G.log.filter(l => l.g === g && l.text.indexOf(' joined as ') < 0).slice(-6).reverse();
+    return `<section class="card" data-g="${g}" style="border-top:5px solid var(--g)"><h3>Group ${GROUPS[g].num}: ${GROUPS[g].name}</h3>
+      <p class="small muted">${G.order[g].length} joined${G.order[g].length ? ': ' + G.order[g].map(pid => esc(G.players[pid].name)).join(', ') : ''}</p>
+      ${guideLine(G, g)}${signalBadge(G, g)}
+      ${G.phase !== 'lobby' && quietIn(G, g).length ? `<p class="small" style="color:var(--ink2)"><b>Not active yet this phase:</b> ${quietIn(G, g).map(pid => esc(G.players[pid].name)).join(', ')}</p>` : ''}
+      ${wordsOf(G, G.open, g) ? '<div class="words small">' + wordsOf(G, G.open, g) + '</div>' : ''}
+      ${items.length ? items.map(l => `<div class="small" style="padding:4px 0;border-bottom:1px solid var(--line)">${esc(l.text)}</div>`).join('') : '<p class="empty small">Nothing yet.</p>'}</section>`;
+  };
+  const links = ['cac', 'mac', 'cc'].map(g => `<div class="item o-${g}" style="background:#fff"><div class="title">Group ${GROUPS[g].num}: ${GROUPS[g].name}</div>
+      <div class="small muted" style="word-break:break-all">${esc(joinLink(g))}</div>
+      <div class="row mt"><button data-act="copy" data-v="${esc(joinLink(g))}">Copy participant link</button><button class="quiet" data-act="copy" data-v="${esc(joinLink(g, true))}">Copy facilitator link</button></div></div>`).join('');
+  if (G.phase === 'reveal') {
+    return `<header class="topbar"><div class="wrap wide"><div class="who">Facilitator<span>Session ${esc(S.room)}</span></div><div class="ph"><b>Look back</b><button class="quiet" style="color:#fff;border-color:rgba(255,255,255,.5);background:transparent;min-height:32px;padding:3px 12px" data-act="phase" data-p="sustain">Back to Sustain</button></div></div></header>
+      <main class="wrap wide">${revealView(null)}</main>`;
+  }
+  return `<header class="topbar"><div class="wrap wide"><div class="who">Facilitator<span>Session ${esc(S.room)}</span></div><div class="ph"><b>${esc(ph.label)}</b><span data-timer></span></div></div></header>
+  <main class="wrap wide">${demoBanner()}
+    <div class="hostgrid">
+      <div>
+        <section class="card"><h2>Join links</h2><p class="small muted">Post each link in its breakout room\u2019s chat. People land straight in their circle.</p>${links}</section>
+        <section class="card"><h2>The season</h2>
+          <ol class="phases">${PHASES.map((p, i) => `<li class="${i === idx ? 'now' : i < idx ? 'done' : ''}"><span class="num">${i + 1}</span><span class="lbl"><b>${p.label}</b><br><span class="small muted">${p.sub}${p.min ? ', about ' + p.min + ' min' : ''}</span></span></li>`).join('')}</ol>
+          ${next ? `<div class="mt"><button class="primary" data-act="phase" data-p="${next.k}">Start ${next.label}</button></div>` : ''}
+          ${idx > 0 ? `<div class="mt"><button class="quiet" data-act="phase" data-p="${PHASES[idx - 1].k}">Go back to ${PHASES[idx - 1].label}</button></div>` : ''}
+        </section>
+        <section class="card"><h3>What to say now</h3><ul class="notes">${ph.notes.map(n => '<li>' + esc(n) + '</li>').join('')}</ul></section>
+      </div>
+      <div>
+        <section class="card"><h2>What has moved between circles</h2>${ring(G)}</section>
+        <div class="grid3">${circleCol('cac')}${circleCol('mac')}${circleCol('cc')}</div>
+      </div>
+    </div>
+  </main>`;
+}
+
+/* Phase timing: elapsed, remaining, and warnings at 1 minute and 30 seconds */
+function phaseClock(G) {
+  if (!G || !G.phaseAt) return null;
+  const ph = PHASES.find(x => x.k === G.phase); if (!ph || !ph.min) return null;
+  const el = (S.rehearsal ? S.simNow : Date.now()) - G.phaseAt, left = ph.min * 60000 - el;
+  return { ph, el, left, next: PHASES[PHASES.findIndex(x => x.k === G.phase) + 1] };
+}
+function clockText(c) {
+  if (!c) return '';
+  if (c.left <= 0) return 'Over time by ' + mmss(-c.left);
+  if (c.left <= 60000) return mmss(c.left) + ' left';
+  return mmss(c.el) + ' of ' + c.ph.min + ' min';
+}
+S.warned = new Set();
+function tick() {
+  const G = S.G, c = phaseClock(G);
+  document.querySelectorAll('[data-timer]').forEach(n => { n.textContent = clockText(c); n.classList.toggle('late', !!c && c.left <= 60000); });
+  document.querySelectorAll('[data-left]').forEach(n => { n.textContent = c ? (c.left > 0 ? mmss(c.left) : '+' + mmss(-c.left)) : '\u2014'; n.classList.toggle('late', !!c && c.left <= 60000); });
+  if (!c || S.rehearsal || !S.loaded) return;
+  [30, 60].forEach(th => {
+    const key = G.phaseAt + ':' + th;
+    if (th === 60 && S.warned.has(G.phaseAt + ':30')) S.warned.add(key);
+    if (c.left <= th * 1000 && c.left > 0 && !S.warned.has(key)) {
+      S.warned.add(key);
+      const g = S.G.players[S.pid] ? S.G.players[S.pid].group : (S.G.guides[S.pid] ? S.G.guides[S.pid].group : null);
+      const msg = (th === 60 ? '1 minute' : '30 seconds') + ' left in ' + c.ph.label;
+      toast(S.host && c.next ? msg + '. Start ' + c.next.label + ' when the rooms are ready.' : msg, g);
+    }
+  });
+}
+setInterval(tick, 1000);
+
+/* ------------------------------ actions ------------------------------ */
+const val = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+const clear = (...ids) => ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+const needText = (id, msg) => { const t = val(id).trim(); if (!t) toast(msg); return t; };
+const A = {
+  home() { S.room = null; S.ui.err = ''; history.replaceState(null, '', location.pathname); render(); },
+  create() { createRoom(); },
+  joinCode() { const c = val('j-code').trim().toUpperCase(); if (c) enterRoom(c); },
+  choose(d) { S.ui.choose = d.v; S.ui.joinErr = ''; render(); },
+  join() {
+    const name = val('j-name').trim(), g = GROUPS[S.circle] ? S.circle : S.ui.choose;
+    if (!name) { S.ui.joinErr = 'Add your first name so your circle knows who you are.'; render(); return; }
+    if (!g) { S.ui.joinErr = 'Choose your breakout group.'; render(); return; }
+    send(S.guide ? 'guide_join' : 'join', { name, group: g });
+  },
+  signal(d) { send('guide_signal', { kind: d.k }); },
+  assignBackbone(d) { send('guide_assign', { pid: d.id }); },
+  word(d) { const t = val(d.k + '-word').trim(); if (!t) { toast('Add a word or two first.'); return; } send(d.k === 'open' ? 'open_word' : 'close_word', { text: t }); clear(d.k + '-word'); },
+  testJoin() {
+    const pid = 't' + uid();
+    try { sessionStorage.setItem('cpx-tabpid:' + S.room, pid); } catch (e) {}
+    S.pid = pid; S.host = false; S.ui.leadLink = false; render();
+  },
+  backToLead() { S.ui.leadLink = false; S.circle = null; S.guide = false; setUrl(); render(); },
+  toggleRole() { S.ui.roleOpen = !S.ui.roleOpen; render(); },
+  copy(d) { (navigator.clipboard ? navigator.clipboard.writeText(d.v) : Promise.reject()).then(() => toast('Link copied'), () => toast('Copy the link from the page')); },
+  phase(d) {
+    const back = PHASES.findIndex(x => x.k === d.p) < PHASES.findIndex(x => x.k === S.G.phase);
+    if (back || d.p === 'reveal' || confirm('Start ' + PHASES.find(x => x.k === d.p).label + ' in all three rooms?')) send('phase', { phase: d.p });
+  },
+  cacProp() { const t = needText('p-title', 'Describe your idea first.'); if (!t) return; send('cac_prop', { title: t, amount: +val('p-amt'), priority: val('p-pri') }); clear('p-title'); },
+  vote(d) { send('cac_vote', { id: d.id, delta: +d.d }); },
+  cacLesson() { const t = needText('l-did', 'Say what you did first.'); if (!t) return; send('cac_lesson', { did: t, dep: val('l-dep').trim(), fail: val('l-fail').trim() }); clear('l-did', 'l-dep', 'l-fail'); },
+  cacNext(d) { send('cac_next', { org: d.id }); },
+  cacCarry() { const t = needText('k-text', 'Write your answer first.'); if (!t) return; send('cac_carry', { text: t }); clear('k-text'); },
+  macPick(d) { S.ui[d.f] = d.v; render(); },
+  macAdapt() {
+    const v = S.ui.verdict, t = val('a-text').trim();
+    if (!v) { toast('Choose keep, change, or drop.'); return; }
+    if (v !== 'keep' && !t) { toast(v === 'drop' ? 'Say why you would drop it.' : 'Say what you would change.'); return; }
+    send('mac_adapt', { lessonId: val('a-which'), verdict: v, text: t }); clear('a-text'); S.ui.verdict = null;
+  },
+  macOwn() {
+    const title = val('o-title').trim(), did = val('o-did').trim();
+    if (!title || !did) { toast('Give your lesson a name and say what you did.'); return; }
+    send('mac_own', { title, did, dep: val('o-dep').trim(), fail: val('o-fail').trim() }); clear('o-title', 'o-did', 'o-dep', 'o-fail');
+  },
+  macReq() { const t = needText('q-text', 'Write your request first.'); if (!t) return; send('mac_req', { text: t }); clear('q-text'); },
+  macKeep(d) { send('mac_keep', { lessonId: d.id }); },
+  macPlan() { const t = needText('m-text', 'Write your answer first.'); if (!t) return; send('mac_plan', { text: t }); clear('m-text'); },
+  ccRule() { const opts = {}; Object.keys(RULE).forEach(k => opts[k] = +val('rule-' + k)); send('cc_rule', { opts }); },
+  ccResp(d) {
+    const cur = pendingRule(S.G); if (!cur) return;
+    const reason = val('c-reason').trim();
+    if (d.s !== 'consent' && !reason) { toast('Add a reason for your ' + (d.s === 'object' ? 'objection' : 'concern') + '.'); const el = document.getElementById('c-reason'); if (el) el.focus(); return; }
+    send('cc_resp', { ruleId: cur.id, stance: d.s, reason }); clear('c-reason');
+  },
+  ccAdopt(d) {
+    const cur = pendingRule(S.G); if (!cur) return;
+    if (d.m === 'agent' && !confirm('Adopt this rule now as fiscal agent, without waiting for consent?')) return;
+    send('cc_adopt', { ruleId: cur.id, mode: d.m });
+  },
+  ccReply(d) { const t = val('rep-' + d.id).trim(); if (!t) return; send('cc_reply', { reqId: d.id, text: t }); clear('rep-' + d.id); },
+  ccReview(d) { send('cc_review', { stance: d.s, reason: val('v-reason').trim() }); clear('v-reason'); }
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  if (b.closest('.simframe') && b.dataset.act !== 'toggleRole') { e.preventDefault(); return; }
+  const fn = A[b.dataset.act]; if (fn) { e.preventDefault(); fn(b.dataset); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'j-code') A.joinCode(); });
+
+/* ------------------------------ rehearsal ------------------------------
+   24 simulated participants play one full season. Each beat adds real
+   events, so every phone shows the actual app.                           */
+const SIM_PEOPLE = {
+  cac: ['Ben', 'Ana', 'Carla', 'Dev', 'Esi', 'Femi', 'Grace', 'Hiro'],
+  mac: ['Ines', 'Jamal', 'Kofi', 'Lucia', 'Mei', 'Nadia', 'Omar', 'Priya'],
+  cc: ['Quinn', 'Rosa', 'Sam', 'Tomas', 'Uma', 'Victor', 'Wren', 'Yara']
+};
+const SP = n => n === 'host' ? 'sim-host' : 'sim-' + n.toLowerCase();
+const SIM_BASE = Date.UTC(2026, 9, 20, 15, 0, 0);
+const vv = (who, ref, n) => Array.from({ length: n }, () => [who, 'cac_vote', { id: ref, delta: 1 }]);
+const rs = (who, rule, stance, reason) => [who, 'cc_resp', { ruleId: rule, stance, reason: reason || '' }];
+
+const SIM_SCRIPT = [
+  { t: 0, g: null, say: 'The facilitator starts the session and posts each group\u2019s join link in its breakout room. People land straight in the right circle.',
+    ev: [['host', 'create', {}]] },
+  { t: 30, g: null, say: 'Three breakout facilitators join with their own links, then twenty-four participants join, eight per room. Each gets a role, and each role carries one thing only that person knows. Click any name to see that person\u2019s screen and role card.',
+    ev: [['Gwen', 'guide_join', { name: 'Gwen', group: 'cac' }], ['Marcus', 'guide_join', { name: 'Marcus', group: 'mac' }], ['Leila', 'guide_join', { name: 'Leila', group: 'cc' }]]
+      .concat(['cac', 'mac', 'cc'].flatMap(g => SIM_PEOPLE[g].map(n => [n, 'join', { name: n, group: g }]))) },
+  { t: 45, g: null, say: 'Each room begins with an opening round. People share a word or two about how they\u2019re feeling right now, and everyone in the room sees them.',
+    ev: [['Ana', 'open_word', { text: 'Pressured' }], ['Carla', 'open_word', { text: 'Worried' }], ['Femi', 'open_word', { text: 'Curious' }], ['Hiro', 'open_word', { text: 'Unsure I belong' }], ['Esi', 'open_word', { text: 'Tired' }],
+         ['Nadia', 'open_word', { text: 'Stretched thin' }], ['Lucia', 'open_word', { text: 'Hopeful' }], ['Kofi', 'open_word', { text: 'Restless' }], ['Ines', 'open_word', { text: 'Ready' }],
+         ['Uma', 'open_word', { text: 'Skeptical' }], ['Yara', 'open_word', { text: 'Nervous' }], ['Quinn', 'open_word', { text: 'Responsible' }], ['Victor', 'open_word', { text: 'Patient' }]],
+    focus: { cac: 'Hiro', mac: 'Nadia', cc: 'Yara' } },
+  { t: 54, g: 'cac', say: 'Ben joined first, so he was given the backbone role. Gwen, facilitating Group 1, chooses Ana instead, who is ready to facilitate. Ana becomes Eastside Neighbors United, and Ben takes her former role, Riverbend Community Health.',
+    ev: [['Gwen', 'guide_assign', { pid: SP('Ana') }]], tab: 'guides' },
+  { t: 60, g: null, say: 'The facilitator starts Build. All three rooms switch at once. Nothing crosses between circles yet; each circle works on its own task.',
+    ev: [['host', 'phase', { phase: 'build' }]] },
+  { t: 95, g: 'cac', say: 'In this run, the two best-staffed organizations propose first. Every proposal goes straight onto the ballot.',
+    ev: [['Ben', 'cac_prop', { title: 'Community health worker outreach', amount: 10000, priority: 'Health access' }, 'pBen'],
+         ['Ana', 'cac_prop', { title: 'Eastside health fair and screenings', amount: 7500, priority: 'Health access' }, 'pAna']] },
+  { t: 120, g: 'mac', say: 'The Health Equity alignment circle exchanges governance lessons. Each delegate picks a practice from another circle and says whether they would keep, change, or drop it, and why.',
+    ev: [['Lucia', 'mac_adapt', { lessonId: 'seedD2', verdict: 'change', text: 'Our promoters already decide this way, but \u201cobjection\u201d sounds rude in our languages. We would ask, \u201cIs there anything here that would hurt someone?\u201d' }],
+         ['Kofi', 'mac_adapt', { lessonId: 'seedH2', verdict: 'keep', text: 'The big organizations never nominate our young leaders. Peers naming each other would change who leads.' }],
+         ['Jamal', 'mac_adapt', { lessonId: 'seedD1', verdict: 'change', text: 'The rest season is what we need most. Our backbone has run the circle for six years. We would start with co-hosts so a handover is possible.' }]] },
+  { t: 150, g: 'cc', say: 'Root Change staff drafts the first rule. It is cautious: only registered organizations, a week to decide, staff decides, a one-page report.',
+    talk: 'Quinn explains the auditor\u2019s 30-day documentation requirement out loud. No one else knew about it.',
+    ev: [['Quinn', 'cc_rule', { opts: { eligibility: 2, turnaround: 1, max: 1, review: 2, reporting: 1 } }, 'r1']] },
+  { t: 185, g: 'cac', say: 'Smaller organizations propose a tenant defense fund, a strike solidarity fund, and an elder phone tree.',
+    talk: 'Maple Court doesn\u2019t say why the tenant fund is urgent. Manos Unidas, Next Gen, and Access Now haven\u2019t spoken yet.',
+    ev: [['Carla', 'cac_prop', { title: 'Emergency tenant defense fund', amount: 7500, priority: 'Housing stability' }, 'pCarla'],
+         ['Grace', 'cac_prop', { title: 'Strike solidarity cash fund', amount: 5000, priority: 'Economic security' }, 'pGrace'],
+         ['Femi', 'cac_prop', { title: 'Elder phone tree and check-ins', amount: 2500, priority: 'Safety and care' }, 'pFemi']] },
+  { t: 225, g: 'cc', say: 'Members respond to the draft. The leader from the U.S. South objects, because the registration requirement would shut her organization out. One objection is enough to block consent.',
+    ev: [rs('Uma', '@r1', 'object', 'Requiring a fiscal sponsor or 501(c)(3) shuts out unincorporated groups like mine.'),
+         rs('Victor', '@r1', 'concern', 'A week is fine, but transfers to my country take 7 to 10 days to clear.'),
+         rs('Rosa', '@r1', 'concern', 'If staff decide, this is not peer-led.'),
+         rs('Wren', '@r1', 'concern', 'Our Delta circle already runs a small emergency fund. Don\u2019t make us route everything through the network.'),
+         rs('Sam', '@r1', 'consent'), rs('Tomas', '@r1', 'consent')] },
+  { t: 250, g: 'cac', say: 'No new clicks for a moment. The conversation in the breakout room matters more here.',
+    talk: 'The backbone, facilitating, invites people who haven\u2019t spoken. Manos Unidas asks whether funded groups will have to publish reports. Nobody is sure.',
+    ev: [], focus: { cac: 'Ana' } },
+  { t: 280, g: 'mac', say: 'More responses. Two delegates look at the same nomination practice and reach opposite conclusions. Priya adds a practice from her own work, which joins the lessons on the table.',
+    ev: [['Nadia', 'mac_adapt', { lessonId: 'seedH1', verdict: 'change', text: 'Our members drive an hour to get here. We would hold the healing circle once a quarter, not before every decision, and protect that time.' }],
+         ['Omar', 'mac_adapt', { lessonId: 'seedH2', verdict: 'drop', text: 'With three organizations, nominating each other just means taking turns. It\u2019s the same people either way.' }],
+         ['Ines', 'mac_adapt', { lessonId: 'seedD2', verdict: 'keep', text: 'Riverbend has strong facilitators. The risk is that the facilitator is always us.' }],
+         ['Mei', 'mac_adapt', { lessonId: 'seedD1', verdict: 'keep', text: 'We rotate already, but nobody rests. A season off would keep our promoters from quitting.' }],
+         ['Priya', 'mac_own', { title: 'Close every meeting by reading back decisions', did: 'The last ten minutes of every meeting are spent reading back each decision and who owns it.', dep: 'A note-taker who is not also facilitating.', fail: 'We kept running out of time, skipped it, and then argued later about what we had agreed.' }, 'oPriya']],
+    focus: { mac: 'Omar' } },
+  { t: 310, g: 'cc', say: 'The Latin America leader proposes an amended rule built around the objection: circle-endorsed requests, 48-hour decisions, peer reviewers, a voice memo for reporting, and grants that can cover organizer wellness and safety. Responses start over.',
+    ev: [['Victor', 'cc_rule', { opts: { eligibility: 1, turnaround: 0, max: 1, review: 0, reporting: 0, covers: 1 } }, 'r2']] },
+  { t: 340, g: 'cac', say: 'Before voting, the conversation shifts.',
+    talk: 'Maple Court finally explains why the tenant fund is urgent: a landlord is preparing eviction filings across its buildings. The room goes quiet, then shifts.',
+    ev: [], focus: { cac: 'Carla' } },
+  { t: 370, g: 'cac', say: 'Voting. Each member has three votes, and most put them on the tenant fund. Access Now doesn\u2019t vote; its member has been mostly off camera.',
+    ev: [].concat(vv('Ana', '@pAna', 2), vv('Ana', '@pBen', 1), vv('Ben', '@pBen', 2), vv('Ben', '@pAna', 1), vv('Femi', '@pFemi', 2), vv('Femi', '@pCarla', 1),
+      vv('Carla', '@pCarla', 3), vv('Grace', '@pCarla', 2), vv('Grace', '@pFemi', 1), vv('Esi', '@pCarla', 2), vv('Dev', '@pFemi', 1)) },
+  { t: 380, g: 'cc', say: 'Leila, facilitating Group 3, sees the consent round still open with a few minutes of Build left. She taps \u201cWe need 2 more minutes,\u201d and it appears on the lead\u2019s screen. Everyone will also see warnings at 1 minute and 30 seconds before each phase\u2019s time is up.',
+    ev: [['Leila', 'guide_signal', { kind: 'more' }]], tab: 'guides' },
+  { t: 400, g: 'cc', say: 'Responses to the amended rule: six consents and two concerns, no objections. Consent is now possible.',
+    talk: 'The youth representative consents, but she almost raised a concern. She wasn\u2019t sure she was allowed to push back on Root Change.',
+    ev: [rs('Quinn', '@r2', 'concern', 'Deciding in 48 hours is fine, but I will need receipts within 30 days.'),
+         rs('Uma', '@r2', 'consent'), rs('Victor', '@r2', 'consent'), rs('Rosa', '@r2', 'consent'), rs('Sam', '@r2', 'consent'),
+         rs('Tomas', '@r2', 'concern', 'Peer reviewers should not all come from one region.'), rs('Wren', '@r2', 'consent'), rs('Yara', '@r2', 'consent')] },
+  { t: 450, g: 'cac', say: 'Where the money lands: the tenant fund and phone tree are funded, then Riverbend\u2019s outreach. The backbone\u2019s own health fair falls short, because only $5,000 is left.',
+    ev: [] },
+  { t: 480, g: null, say: 'The facilitator starts Win. Now the circles connect. Anything one circle sends appears under \u201cArrived from other circles\u201d at the top of another circle\u2019s screens.',
+    ev: [['host', 'phase', { phase: 'flow' }]] },
+  { t: 510, g: 'cac', say: 'Maple Court and Greater Hope each send the alignment circle a lesson about how their circle decided this season: what they did, what it depended on, and what nearly went wrong.',
+    ev: [['Carla', 'cac_lesson', { did: 'We let the people most affected explain what was at stake before anyone voted.', dep: 'A backbone willing to slow the room down and hold back the larger organizations.', fail: 'We almost voted before Maple Court explained the evictions.' }, 'lCarla'],
+         ['Femi', 'cac_lesson', { did: 'Everyone had three votes and could see the running totals, so small groups could put all three behind one thing.', dep: 'Totals visible to everyone while voting was open.', fail: 'Access Now had stopped coming, so its votes were never cast.' }, 'lFemi']],
+    focus: { mac: 'Ines' } },
+  { t: 540, g: 'cc', say: 'The health equity representative adopts the amended rule by consent. It arrives on the Eastside and alignment circle screens right away.',
+    ev: [['Rosa', 'cc_adopt', { ruleId: '@r2', mode: 'consent' }]], focus: { cac: 'Ana' } },
+  { t: 575, g: 'mac', say: 'Delegates respond to the Eastside lessons, and to Priya\u2019s. Their responses travel back, so Maple Court and Greater Hope can see what others made of their lessons.',
+    ev: [['Lucia', 'mac_adapt', { lessonId: '@lCarla', verdict: 'change', text: 'In our villages, the most affected people are often the last to speak. We would ask an elder to invite them first.' }],
+         ['Nadia', 'mac_adapt', { lessonId: '@lFemi', verdict: 'keep', text: 'Running totals matter. Last year our small groups didn\u2019t know they could win until the vote was over.' }],
+         ['Kofi', 'mac_adapt', { lessonId: '@oPriya', verdict: 'keep', text: 'We never write down who owns a decision. This is the easiest thing here to try next week.' }]],
+    focus: { cac: 'Carla' } },
+  { t: 610, g: 'mac', say: 'The alignment circle sends two requests up to the Coordination Circle.',
+    ev: [['Lucia', 'mac_req', { text: 'Fund interpretation so governance lessons reach promoters who don\u2019t read English.' }, 'qLucia'],
+         ['Mei', 'mac_req', { text: 'Describe grants to the highlands circle as health services, not advocacy, so our network is not put at risk.' }, 'qMei']] },
+  { t: 650, g: 'cc', say: 'The Coordination Circle replies to both. One gets a yes; the other gets a \u201cwe need to check.\u201d',
+    ev: [['Victor', 'cc_reply', { reqId: '@qLucia', text: 'Yes. We will set aside part of the learning budget for interpretation.' }],
+         ['Quinn', 'cc_reply', { reqId: '@qMei', text: 'We need to check with our lawyers before changing how grants are described.' }]], focus: { mac: 'Lucia' } },
+  { t: 700, g: 'cac', say: 'No new clicks here, but the conversation keeps going in the breakout room.',
+    talk: 'Access Now speaks up for the first time: the last three in-person meetings were in a building with a broken elevator. Nobody had asked why they stopped coming.',
+    ev: [], focus: { cac: 'Hiro' } },
+  { t: 780, g: null, say: 'The facilitator starts Sustain. There is no crisis. Each circle decides how its work continues into next season.',
+    ev: [['host', 'phase', { phase: 'sustain' }]] },
+  { t: 810, g: 'cac', say: 'The backbone role rotates. Most members choose Greater Hope Food Pantry to convene next season. The backbone and Riverbend choose Riverbend.',
+    talk: 'Femi, from Greater Hope, is surprised. No one had ever asked the pantry to lead anything.',
+    ev: ['Carla', 'Grace', 'Esi', 'Dev', 'Hiro'].map(n => [n, 'cac_next', { org: SP('Femi') }]).concat([['Ana', 'cac_next', { org: SP('Ben') }], ['Ben', 'cac_next', { org: SP('Ben') }], ['Femi', 'cac_next', { org: SP('Carla') }]]),
+    focus: { cac: 'Femi' } },
+  { t: 850, g: 'cac', say: 'Members say what would help the next backbone, and everyone else, avoid burning out.',
+    ev: [['Femi', 'cac_carry', { text: 'Share the bookkeeping so it isn\u2019t all on our volunteers, and help us run the first ballot. We have never done either.' }],
+         ['Hiro', 'cac_carry', { text: 'Meet somewhere with a working elevator, or online, so people who dropped away can come back without explaining themselves.' }],
+         ['Ana', 'cac_carry', { text: 'After six years convening, I need a real season off. I\u2019ll sit in on the first two meetings, then step back.' }]] },
+  { t: 880, g: 'mac', say: 'Each delegate chooses one lesson to carry into next season. The most popular is Eastside\u2019s: let the most affected speak before anyone votes.',
+    ev: [['Ines', 'mac_keep', { lessonId: '@lCarla' }], ['Nadia', 'mac_keep', { lessonId: '@lCarla' }], ['Omar', 'mac_keep', { lessonId: '@lCarla' }],
+         ['Lucia', 'mac_keep', { lessonId: 'seedD2' }], ['Mei', 'mac_keep', { lessonId: 'seedD2' }], ['Jamal', 'mac_keep', { lessonId: '@oPriya' }], ['Kofi', 'mac_keep', { lessonId: '@oPriya' }], ['Priya', 'mac_keep', { lessonId: 'seedH1' }]],
+    focus: { mac: 'Ines' } },
+  { t: 910, g: 'mac', say: 'Delegates say what would keep that lesson moving between their circles.',
+    talk: 'Nadia shares why she has been careful all session. The others hadn\u2019t realized the Delta circle was shrinking.',
+    ev: [['Nadia', 'mac_plan', { text: 'Only if it doesn\u2019t add meetings. Two of our organizations left this year because their staff burned out. Pair us with one Eastside group by phone, once a month.' }],
+         ['Lucia', 'mac_plan', { text: 'Send it to us as a voice note in Spanish, and we will translate it for the promoters.' }]],
+    focus: { mac: 'Nadia' } },
+  { t: 940, g: 'cc', say: 'The rule hasn\u2019t been used yet. Members say whether they would keep it and whether it cares for the people doing the work. They split.',
+    ev: [['Uma', 'cc_review', { stance: 'change', reason: 'Requiring circle endorsement still shuts out groups that haven\u2019t joined a circle yet.' }],
+         ['Wren', 'cc_review', { stance: 'change', reason: 'Let circles that run their own emergency funds decide small grants locally.' }],
+         ['Quinn', 'cc_review', { stance: 'keep', reason: 'We haven\u2019t used it yet. Let\u2019s see it work before we change it.' }],
+         ['Rosa', 'cc_review', { stance: 'keep', reason: 'Covering organizer wellness is the part I would fight to keep.' }], ['Victor', 'cc_review', { stance: 'keep', reason: '' }],
+         ['Sam', 'cc_review', { stance: 'change', reason: '' }], ['Tomas', 'cc_review', { stance: 'change', reason: '' }], ['Yara', 'cc_review', { stance: 'keep', reason: '' }]],
+    focus: { cc: 'Uma' } },
+  { t: 970, g: 'cc', say: 'The U.S. South leader proposes a revision: any member organization can request, with everything else unchanged.',
+    ev: [['Uma', 'cc_rule', { opts: { eligibility: 0, turnaround: 0, max: 1, review: 0, reporting: 0, covers: 1 } }, 'r3']] },
+  { t: 1000, g: 'cc', say: 'Responses to the revision: no objections. Root Change staff raises a concern about workload but consents.',
+    ev: [rs('Quinn', '@r3', 'concern', 'More eligible organizations means more grants to document.'), rs('Rosa', '@r3', 'consent'), rs('Sam', '@r3', 'consent'),
+         rs('Tomas', '@r3', 'concern', 'Make sure peer reviewers rotate.'), rs('Victor', '@r3', 'consent'), rs('Wren', '@r3', 'consent'), rs('Yara', '@r3', 'consent')], focus: { cc: 'Quinn' } },
+  { t: 1030, g: 'cc', say: 'Uma adopts the revision by consent. Root Change staff had the fiscal agent button the whole time and didn\u2019t use it.',
+    ev: [['Uma', 'cc_adopt', { ruleId: '@r3', mode: 'consent' }]] },
+  { t: 1080, g: null, say: 'The facilitator opens Look back. Everyone sees the same reflection: care this season, hidden contexts, the power table, how lessons traveled, and where decisions were made.',
+    ev: [['host', 'phase', { phase: 'reveal' }]] },
+  { t: 1110, g: null, say: 'Everyone adds one closing word. The words gather at the top of the facilitator view, ready for the full-group debrief. Switch to the lead facilitator view to see what you would screen-share.',
+    ev: [['Hiro', 'close_word', { text: 'Seen' }], ['Femi', 'close_word', { text: 'Trusted' }], ['Ana', 'close_word', { text: 'Relief' }], ['Carla', 'close_word', { text: 'Heard' }],
+         ['Nadia', 'close_word', { text: 'Less alone' }], ['Lucia', 'close_word', { text: 'Translation' }], ['Priya', 'close_word', { text: 'Practical' }], ['Kofi', 'close_word', { text: 'Ready to try' }],
+         ['Yara', 'close_word', { text: 'Braver' }], ['Uma', 'close_word', { text: 'Included' }], ['Quinn', 'close_word', { text: 'Let go' }], ['Rosa', 'close_word', { text: 'Care' }]] }
+];
+
+/* The script is written on a compact clock; stretch each phase to the session's
+   timings (Gathering 5, Build 15, Win 10, Sustain 10 minutes). */
+const SIM_PHASE_MAP = [[0, 60, 0, 300], [60, 480, 300, 1200], [480, 780, 1200, 1800], [780, 1080, 1800, 2400], [1080, 1200, 2400, 2520]];
+function simTime(t) {
+  const m = SIM_PHASE_MAP.find(([a, b]) => t >= a && t < b) || SIM_PHASE_MAP[SIM_PHASE_MAP.length - 1];
+  return Math.round(m[2] + (t - m[0]) * (m[3] - m[2]) / (m[1] - m[0]));
+}
+function compileSim() {
+  const refs = {}; let n = 0;
+  return SIM_SCRIPT.map(step => {
+    const evs = step.ev.map(([who, type, payload, ref]) => {
+      const id = 'e' + String(++n).padStart(4, '0'), p = JSON.parse(JSON.stringify(payload));
+      ['id', 'ruleId', 'reqId', 'lessonId'].forEach(k => { if (typeof p[k] === 'string' && p[k][0] === '@') p[k] = refs[p[k].slice(1)]; });
+      if (ref) refs[ref] = id;
+      return { id, pid: SP(who), type, payload: p, ts: SIM_BASE + simTime(step.t) * 1000 + n };
+    });
+    return Object.assign({}, step, { t: simTime(step.t), events: evs });
+  });
+}
+function startRehearsal() {
+  S.rehearsal = true; S.room = 'REHEARSAL'; S.loaded = true; S.host = false;
+  S.sim = { steps: compileSim(), i: 0, tab: 'rooms', follow: true, sel: { cac: SP('Ana'), mac: SP('Ines'), cc: SP('Quinn') }, timer: null, phase: 'lobby' };
+  S.ui.roleOpen = true;
+  simGo(0);
+}
+function simGo(i) {
+  const sim = S.sim; i = Math.max(0, Math.min(sim.steps.length - 1, i)); sim.i = i;
+  S.events = sim.steps.slice(0, i + 1).flatMap(s => s.events);
+  S.G = reduce(S.events);
+  const step = sim.steps[i];
+  S.simNow = SIM_BASE + step.t * 1000 + 999;
+  S.fresh = new Set();
+  step.events.forEach(e => { if (e.type === 'open_word') S.fresh.add('round-open'); if (e.type === 'close_word') S.fresh.add('round-close'); S.fresh.add(e.id); ['id', 'reqId', 'lessonId', 'ruleId', 'org'].forEach(k => { if (e.payload[k]) S.fresh.add(String(e.payload[k])); }); });
+  if (S.G.phase !== sim.phase) { sim.phase = S.G.phase; S.ui.roleOpen = S.G.phase === 'lobby'; }
+  if (sim.follow) {
+    ['cac', 'mac', 'cc'].forEach(g => { const first = step.events.find(e => S.G.players[e.pid] && S.G.players[e.pid].group === g); if (first) sim.sel[g] = first.pid; });
+    Object.entries(step.focus || {}).forEach(([g, n]) => { sim.sel[g] = SP(n); });
+    sim.tab = step.tab || (S.G.phase === 'reveal' ? 'host' : 'rooms');
+  }
+  render();
+}
+function simPlay() {
+  const sim = S.sim;
+  if (sim.timer) { clearInterval(sim.timer); sim.timer = null; render(); return; }
+  if (sim.i >= sim.steps.length - 1) simGo(0);
+  sim.timer = setInterval(() => { if (S.sim.i >= S.sim.steps.length - 1) { clearInterval(S.sim.timer); S.sim.timer = null; render(); return; } simGo(S.sim.i + 1); }, 5000);
+  render();
+}
+function rehearsalView() {
+  const sim = S.sim, G = S.G, step = sim.steps[sim.i], ph = PHASES.find(p => p.k === G.phase), N = sim.steps.length;
+  const col = g => {
+    const sel = G.players[sim.sel[g]];
+    const chips = SIM_PEOPLE[g].map(n => { const p = G.players[SP(n)]; if (!p) return ''; const on = SP(n) === sim.sel[g];
+      return `<button class="chip${on ? ' on' : ''}" data-act="simSel" data-g="${g}" data-pid="${SP(n)}" aria-pressed="${on}" title="${esc(roleOf(p).name)}">${esc(n)}</button>`; }).join('');
+    return `<section class="simcol" data-g="${g}">
+      <h3 style="color:var(--g-ink);margin-bottom:6px">Group ${GROUPS[g].num}: ${GROUPS[g].name}</h3>
+      <div class="chips">${chips || '<span class="small muted">No one has joined yet.</span>'}</div>
+      ${sel ? `<p class="small muted" style="margin:6px 0">Showing ${esc(sel.name)}\u2019s screen, ${esc(roleOf(sel).name)}</p><div class="simframe phone">${playerView(sel)}</div>`
+            : '<div class="simframe phone"><div class="wrap"><p class="muted">Waiting for people to join.</p></div></div>'}
+    </section>`;
+  };
+  return `<header class="topbar"><div class="wrap wide"><div class="who">Rehearsal<span>A scripted example. Real participants make their own choices.</span></div>
+      <div class="ph"><b>${esc(ph.label)}</b><span>Season time ${mmss(step.t * 1000)}</span></div></div></header>
+    <main class="wrap wide">
+      <section class="card simctl">
+        <div class="row between">
+          <div class="row">
+            <button data-act="simPrev" ${sim.i ? '' : 'disabled'}>Back</button>
+            <button class="primary" data-act="simPlay">${sim.timer ? 'Pause' : 'Play'}</button>
+            <button data-act="simNext" ${sim.i < N - 1 ? '' : 'disabled'}>Next</button>
+            <span class="small muted">Step ${sim.i + 1} of ${N}</span>
+          </div>
+          <div class="row">
+            <label class="small" style="margin:0;font-weight:400;display:flex;gap:6px;align-items:center"><input type="checkbox" id="sim-follow" style="width:auto" ${sim.follow ? 'checked' : ''}> Follow the action</label>
+            <button class="quiet" data-act="simExit">Leave rehearsal</button>
+          </div>
+        </div>
+        <input type="range" id="sim-range" data-reset="1" min="0" max="${N - 1}" value="${sim.i}" aria-label="Jump to step" style="margin-top:10px;padding:0">
+        <div class="narr" ${step.g ? `data-g="${step.g}"` : ''}>
+          <div class="small" style="color:var(--g-ink);font-weight:700">${step.g ? 'Group ' + GROUPS[step.g].num + ': ' + GROUPS[step.g].name : 'All rooms'}</div>
+          <p style="font-size:1.08rem;margin:.2em 0 .4em">${esc(step.say)}</p>
+          ${step.talk ? `<p class="talk"><b>In the breakout room:</b> ${esc(step.talk)}</p>` : ''}
+        </div>
+      </section>
+      <div class="row" role="tablist" style="margin:0 0 12px">
+        <button role="tab" data-act="simTab" data-v="rooms" aria-selected="${sim.tab === 'rooms'}" class="${sim.tab === 'rooms' ? 'primary' : ''}">Breakout rooms</button>
+        <button role="tab" data-act="simTab" data-v="guides" aria-selected="${sim.tab === 'guides'}" class="${sim.tab === 'guides' ? 'primary' : ''}">Breakout facilitators</button>
+        <button role="tab" data-act="simTab" data-v="host" aria-selected="${sim.tab === 'host'}" class="${sim.tab === 'host' ? 'primary' : ''}">Lead facilitator</button>
+      </div>
+      ${sim.tab === 'rooms' ? `<div class="grid3">${col('cac')}${col('mac')}${col('cc')}</div>`
+        : sim.tab === 'guides' ? `<div class="grid3">${['cac', 'mac', 'cc'].map(g => { const gd = Object.values(G.guides).find(x => x.group === g);
+            return `<section class="simcol" data-g="${g}"><h3 style="color:var(--g-ink);margin-bottom:6px">Group ${GROUPS[g].num}: ${GROUPS[g].name}</h3>
+              ${gd ? `<p class="small muted" style="margin:6px 0">${esc(gd.name)}\u2019s screen</p><div class="simframe phone">${guideView(gd)}</div>` : '<p class="muted">The breakout facilitator hasn\u2019t joined yet.</p>'}</section>`; }).join('')}</div>`
+        : `<div class="simframe hostframe">${hostView()}</div>`}
+    </main>`;
+}
+Object.assign(A, {
+  rehearse() { startRehearsal(); },
+  simNext() { simGo(S.sim.i + 1); },
+  simPrev() { simGo(S.sim.i - 1); },
+  simPlay() { simPlay(); },
+  simTab(d) { S.sim.tab = d.v; render(); },
+  simSel(d) { S.sim.sel[d.g] = d.pid; S.sim.follow = false; render(); },
+  simExit() { if (S.sim.timer) clearInterval(S.sim.timer); S.rehearsal = false; S.sim = null; S.room = null; S.events = []; S.G = emptyGame(); S.fresh = new Set(); history.replaceState(null, '', location.pathname); render(); }
+});
+document.addEventListener('change', e => {
+  if (!S.rehearsal) return;
+  if (e.target.id === 'sim-range') simGo(+e.target.value);
+  if (e.target.id === 'sim-follow') { S.sim.follow = e.target.checked; if (S.sim.follow) simGo(S.sim.i); }
+});
+document.addEventListener('keydown', e => {
+  if (!S.rehearsal || (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && e.target.type !== 'range')) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); simGo(S.sim.i + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); simGo(S.sim.i - 1); }
+});
+
+/* ------------------------------ start ------------------------------ */
+(function boot() {
+  const q = new URLSearchParams(location.search), room = (q.get('room') || '').trim().toUpperCase(), circle = (q.get('circle') || '').toLowerCase();
+  if (GROUPS[circle]) S.circle = circle;
+  if (q.get('role') === 'facilitator' && GROUPS[circle]) S.guide = true;
+  if (room) enterRoom(room); else render();
+})();
+</script>
+</body>
+</html>
